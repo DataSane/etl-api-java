@@ -1,0 +1,21 @@
+out. 05, 2024 4:37:21 PM logs_config.LogHandler setLog
+INFO: DROP, CREATE e USE database
+
+out. 05, 2024 4:37:22 PM logs_config.LogHandler setLog
+INFO: DROP e CREATE tabela Municipios
+
+out. 05, 2024 4:37:23 PM logs_config.LogHandler setLog
+INFO: Células lidas com sucesso
+
+out. 05, 2024 4:37:23 PM logs_config.LogHandler setLog
+INFO: Iniciando inserção dos objetos no Banco
+
+out. 05, 2024 4:37:24 PM logs_config.LogHandler setLog
+INFO: Todos objetos inseridos no Banco
+
+out. 05, 2024 4:37:25 PM logs_config.LogHandler setLog
+INFO: Exibindo dados da tabela MySQL
+
+out. 05, 2024 4:37:25 PM logs_config.LogHandler setLog
+INFO: Exibição de objetos finalizada
+
