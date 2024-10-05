@@ -46,7 +46,7 @@ public class GerenciadorMunicipio {
 
             // Criando objetos com os valores de cada celula
             Municipio municipio = Municipio.builder()
-                    .cidade(cells.get(0).getStringCellValue())
+                    .municipio(cells.get(0).getStringCellValue())
                     .estado(cells.get(1).getStringCellValue())
                     .populacao((int) cells.get(2).getNumericCellValue())
                     .planoMunicipal(cells.get(3).getStringCellValue())
