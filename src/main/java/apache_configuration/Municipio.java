@@ -1,16 +1,12 @@
 package apache_configuration;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @ToString
 @Getter
 @Setter
 @Builder
 public class Municipio {
-
     private String municipio;
     private String estado;
     private Integer populacao;

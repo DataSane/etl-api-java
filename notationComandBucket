@@ -1,0 +1,49 @@
+    // *************************************
+    // *   Listando todos os buckets       *
+    // *************************************
+//        try {
+//        List<Bucket> buckets = s3Client.listBuckets().buckets();
+//        System.out.println("Lista de buckets:");
+//        for (Bucket bucket : buckets) {
+//            System.out.println("- " + bucket.name());
+//        }
+//    } catch (S3Exception e) {
+//        System.err.println("Erro ao listar buckets: " + e.getMessage());
+//    }
+
+    // *************************************
+    // *   Listando objetos do bucket      *
+    // *************************************
+//        try {
+//        ListObjectsRequest listObjects = ListObjectsRequest.builder()
+//                .bucket(bucketName)
+//                .build();
+//
+//        List<S3Object> objects = s3Client.listObjects(listObjects).contents();
+//        System.out.println("Objetos no bucket " + bucketName + ":");
+//        for (S3Object object : objects) {
+//            System.out.println("- " + object.key());
+//        }
+//    } catch (S3Exception e) {
+//        System.err.println("Erro ao listar objetos no bucket: " + e.getMessage());
+//    }
+
+
+
+
+        // *************************************
+        // *   Deletando um objeto do bucket   *
+        // *************************************
+//        try {
+//        String objectKeyToDelete = "identificador-do-arquivo";
+//        DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
+//                .bucket(bucketName)
+//                .key(objectKeyToDelete)
+//                .build();
+//        s3Client.deleteObject(deleteObjectRequest);
+//
+//        System.out.println("Objeto deletado com sucesso: " + objectKeyToDelete);
+//    } catch (S3Exception e) {
+//        System.err.println("Erro ao deletar objeto: " + e.getMessage());
+//    }
+//    }

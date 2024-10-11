@@ -1,5 +1,6 @@
 package apache_configuration;
 
+import client.bucketS3.ControllerBucket;
 import lombok.Cleanup;
 import org.apache.commons.collections4.IteratorUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -8,8 +9,8 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -23,12 +24,14 @@ public class GerenciadorMunicipio {
     .
      */
     public List<Municipio> criar() throws IOException {
+        ControllerBucket appBucket = new ControllerBucket();
 
         List<Municipio> municipios = new ArrayList<>();
 
         // Recupeerando arquivo xls
         @Cleanup // Essa anotation fecha o arquivo após ser executado - usada no lugar do try catch
-        FileInputStream file = new FileInputStream("src/main/resources/municipios.xls");
+        InputStream file = appBucket.downloadS3();
+
         Workbook workbook = new HSSFWorkbook(file); // Pega a planilha
 
         // Indica a aba da planilha

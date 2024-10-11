@@ -1,17 +1,22 @@
+package client.clientMySQL;
+
+import io.github.cdimascio.dotenv.Dotenv;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
 
-public class Conexao {
+public class ConnectionMySQL {
 
     private final DataSource dataSource;
 
-    public Conexao() {
+    public ConnectionMySQL() {
+        Dotenv dotenv = Dotenv.load();
+        
         BasicDataSource basicDataSource = new BasicDataSource();
-        basicDataSource.setUrl("jdbc:mysql://localhost/datasaneBD?useTimezone=true&serverTimezone=UTC");
-        basicDataSource.setUsername("datasane");
-        basicDataSource.setPassword("datasane2024");
+        basicDataSource.setUrl(dotenv.get("MYSQL_URL"));
+        basicDataSource.setUsername(dotenv.get("MYSQL_USERNAME"));
+        basicDataSource.setPassword(dotenv.get("MYSQL_PASSWORD"));
 
         this.dataSource = basicDataSource;
     }

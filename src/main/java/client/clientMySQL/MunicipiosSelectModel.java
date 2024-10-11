@@ -1,5 +1,6 @@
-public class Municipios {
+package client.clientMySQL;
 
+public class MunicipiosSelectModel {
     private Integer idMunicipios;
     private String nome;
     private Integer populacaoTotal;
@@ -9,10 +10,10 @@ public class Municipios {
     private Double domicilioSujeitoInundacoes;
     private String possuiPlanoMunicipal;
 
-    public Municipios() {
+    public MunicipiosSelectModel() {
     }
 
-    public Municipios(Integer idMunicipios, String nome, Integer populacaoTotal, Double populacaoSemLixo, Double populacaoSemAgua, Double populacaoSemEsgoto, Double domicilioSujeitoInundacoes, String possuiPlanoMunicipal) {
+    public MunicipiosSelectModel(Integer idMunicipios, String nome, Integer populacaoTotal, Double populacaoSemLixo, Double populacaoSemAgua, Double populacaoSemEsgoto, Double domicilioSujeitoInundacoes, String possuiPlanoMunicipal) {
         this.idMunicipios = idMunicipios;
         this.nome = nome;
         this.populacaoTotal = populacaoTotal;
@@ -86,9 +87,4 @@ public class Municipios {
     public void setPossuiPlanoMunicipal(String possuiPlanoMunicipal) {
         this.possuiPlanoMunicipal = possuiPlanoMunicipal;
     }
-
-    //    @Override
-//    public String toString() {
-//        return this.nome + " (" + this.ano + ") - " + this.genero + " - " + this.diretor;
-//    }
 }

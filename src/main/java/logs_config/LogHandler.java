@@ -1,5 +1,7 @@
 package logs_config;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -8,6 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
+@Slf4j
 public class LogHandler {
     public void setLog(Integer level, String logName, String className) {
 
