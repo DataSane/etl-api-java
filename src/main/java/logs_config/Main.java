@@ -1,3 +1,5 @@
+package logs_config;
+
 import client.clientMySQL.ControllerMySQL;
 import lombok.extern.slf4j.Slf4j;
 

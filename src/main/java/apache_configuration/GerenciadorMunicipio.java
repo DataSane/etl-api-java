@@ -23,12 +23,11 @@ public class GerenciadorMunicipio {
         ex: chamar o metodo na main dentro de um try catch
     .
      */
-    public List<Municipio> criar() throws IOException {
+    public List<Municipio> criar(Boolean porcentagemAplicada) throws IOException {
         ControllerBucket appBucket = new ControllerBucket();
-
         List<Municipio> municipios = new ArrayList<>();
 
-        // Recupeerando arquivo xls
+        // Recuperando arquivo xls
         @Cleanup // Essa anotation fecha o arquivo após ser executado - usada no lugar do try catch
         InputStream file = appBucket.downloadS3();
 
@@ -46,17 +45,37 @@ public class GerenciadorMunicipio {
         rows.forEach(row -> {
             // Percorre cada celular da linha e, adiciona cada celula da linha atual em uma lista
             List<Cell> cells = (List<Cell>) toList(row.cellIterator());
+            Municipio municipio = null;
 
-            // Criando objetos com os valores de cada celula
-            Municipio municipio = Municipio.builder()
-                    .municipio(cells.get(0).getStringCellValue())
-                    .estado(cells.get(1).getStringCellValue())
-                    .populacao((int) cells.get(2).getNumericCellValue())
-                    .planoMunicipal(cells.get(3).getStringCellValue())
-                    .populacaoSemAgua(convertTypeValue(cells.get(4))) // Pegando o tipo para validar o campo que está vindo da planilha
-                    .populacaoSemEsgoto(convertTypeValue(cells.get(5)))
-                    .populacaoSemColetaDeLixo(convertTypeValue(cells.get(6)))
-                    .domiciliosSujeitosAInundacao(convertTypeValue(cells.get(7)))
+            String nomeMunicipio = cells.get(0).getStringCellValue();
+            String estadoMunicipio = cells.get(1).getStringCellValue();
+            Integer populacaoMunicipio = (int) cells.get(2).getNumericCellValue();
+            String planoMunicipio = cells.get(3).getStringCellValue();
+            Double populacaoSemAguaMunicipio = 0.0;
+            Double populacaoSemEsgotoMunicipio = 0.0;
+            Double populacaoSemColetaDeLixoMunicipio = 0.0;
+            Double domiciliosSujeitosAInundacaoMunicipio = convertTypeValue(cells.get(7));
+
+            if (porcentagemAplicada) {
+                populacaoSemAguaMunicipio = populacaoMunicipio * (convertTypeValue(cells.get(4)) / 100);
+                populacaoSemEsgotoMunicipio = populacaoMunicipio * (convertTypeValue(cells.get(5)) / 100);
+                populacaoSemColetaDeLixoMunicipio = populacaoMunicipio * (convertTypeValue(cells.get(6)) / 100);
+            } else {
+                populacaoSemAguaMunicipio = convertTypeValue(cells.get(4));
+                populacaoSemEsgotoMunicipio = convertTypeValue(cells.get(5));
+                populacaoSemColetaDeLixoMunicipio = convertTypeValue(cells.get(6));
+            }
+
+            // Criando objetos com o total de pessoas afetadas
+            municipio = Municipio.builder()
+                    .municipio(nomeMunicipio)
+                    .estado(estadoMunicipio)
+                    .populacao(populacaoMunicipio)
+                    .planoMunicipal(planoMunicipio)
+                    .populacaoSemAgua(populacaoSemAguaMunicipio)// Pegando o tipo para validar o campo que está vindo da planilha
+                    .populacaoSemEsgoto(populacaoSemEsgotoMunicipio)
+                    .populacaoSemColetaDeLixo(populacaoSemColetaDeLixoMunicipio)
+                    .domiciliosSujeitosAInundacao(domiciliosSujeitosAInundacaoMunicipio)
                     .build();
 
             // adiciona o objeto criado na lista de usuarios
@@ -66,8 +85,8 @@ public class GerenciadorMunicipio {
     }
 
     // Trata os dados de string da planilha
-    public Double convertTypeValue(Cell cell){
-        switch (cell.getCellType()){
+    public Double convertTypeValue(Cell cell) {
+        switch (cell.getCellType()) {
             case STRING:
                 return 0.0;
             case NUMERIC:
@@ -78,12 +97,11 @@ public class GerenciadorMunicipio {
     }
 
     // Transforma a lista de Iterator em uma List
-    public List<?> toList(Iterator<?> iterator){
+    public List<?> toList(Iterator<?> iterator) {
         return IteratorUtils.toList(iterator);
     }
 
-    public void imprimir(List<Municipio> lista){
+    public void imprimir(List<Municipio> lista) {
         lista.forEach(System.out::println);
-
     }
 }

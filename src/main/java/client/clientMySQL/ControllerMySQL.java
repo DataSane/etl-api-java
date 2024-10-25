@@ -17,13 +17,14 @@ public class ControllerMySQL {
     JdbcTemplate con = conexao.getConexao();
     GerenciadorMunicipio gerenciadorMunicipio = new GerenciadorMunicipio();
     LogHandler mainLogger = new LogHandler(); // intancia, pra usar o método
+    Boolean porcentagemAplicada = true;
 
     List<Municipio> listaMunicipios = new ArrayList<>();
 
     public void createMunicipios() {
 
         mainLogger.setLog(3,"DROP, CREATE e USE database", ControllerMySQL.class.getName());
-        con.execute("USE datasaneBD");
+        con.execute("USE datasaneTESTE");
 
         mainLogger.setLog(3,"DROP e CREATE tabela Municipios", ControllerMySQL.class.getName());
         con.execute("DROP TABLE IF EXISTS Municipios");
@@ -32,17 +33,17 @@ public class ControllerMySQL {
                  idMunicipios INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
                  nome VARCHAR(60),
                  populacaoTotal INT,
-                 populacaoSemLixo DECIMAL(4,2),
-                 populacaoSemAgua DECIMAL(4,2),
-                 populacaoSemEsgoto DECIMAL(4,2),
-                 domicilioSujeitoInundacoes DECIMAL(4,2),
+                 populacaoSemLixo DECIMAL(10,2),
+                 populacaoSemAgua DECIMAL(10,2),
+                 populacaoSemEsgoto DECIMAL(10,2),
+                 domicilioSujeitoInundacoes DECIMAL(10,2),
                  possuiPlanoMunicipal VARCHAR(15));
                  """);
     }
 
     public void insertMunicipios() {
         try {
-            listaMunicipios = gerenciadorMunicipio.criar();
+            listaMunicipios = gerenciadorMunicipio.criar(!porcentagemAplicada);
             mainLogger.setLog(3,"Células lidas com sucesso", ControllerMySQL.class.getName());
         }catch (IOException ex){
             mainLogger.setLog(1,ex.getMessage(), ControllerMySQL.class.getName());
