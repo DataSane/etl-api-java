@@ -223,3 +223,6 @@ INFO: Exibindo dados da tabela MySQL
 out. 11, 2024 7:37:08 PM logs_config.LogHandler setLog
 INFO: Exibição de objetos finalizada
 
+out. 25, 2024 2:40:52 PM logs_config.LogHandler setLog
+INFO: DROP, CREATE e USE database
+

@@ -1,6 +1,5 @@
 package client.clientMySQL;
 
-import io.github.cdimascio.dotenv.Dotenv;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -11,12 +10,16 @@ public class ConnectionMySQL {
     private final DataSource dataSource;
 
     public ConnectionMySQL() {
-        Dotenv dotenv = Dotenv.load();
-        
         BasicDataSource basicDataSource = new BasicDataSource();
-        basicDataSource.setUrl(dotenv.get("MYSQL_URL"));
-        basicDataSource.setUsername(dotenv.get("MYSQL_USERNAME"));
-        basicDataSource.setPassword(dotenv.get("MYSQL_PASSWORD"));
+
+        // Construindo a URL do banco de dados a partir das variáveis de ambiente
+        String dbHost = System.getenv("DB_HOST");
+        String dbName = System.getenv("DB_NAME");
+        String dbUrl = "jdbc:mysql://" + dbHost + ":3306/" + dbName;
+
+        basicDataSource.setUrl(dbUrl);
+        basicDataSource.setUsername(System.getenv("DB_USER"));
+        basicDataSource.setPassword(System.getenv("DB_PASSWORD"));
 
         this.dataSource = basicDataSource;
     }
