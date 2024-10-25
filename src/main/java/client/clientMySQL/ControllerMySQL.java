@@ -17,44 +17,45 @@ public class ControllerMySQL {
     JdbcTemplate con = conexao.getConexao();
     GerenciadorMunicipio gerenciadorMunicipio = new GerenciadorMunicipio();
     LogHandler mainLogger = new LogHandler(); // intancia, pra usar o método
+
     Boolean porcentagemAplicada = true;
-    String nameTable  = null;
-    
+    String nameDatabase = null;
+    String nameTable = null;
+
     List<Municipio> listaMunicipios = new ArrayList<>();
+
+    public String setVariableControl(String variable, String firstValue, String secondValue) {
+        for (Integer counter = 0; counter <= 2; counter++) {
+            if (counter.equals(0)) {
+                return variable = firstValue;
+            } else {
+                return variable = secondValue;
+            }
+        }
+    }
+
     public void createMunicipios() {
         mainLogger.setLog(3, "DROP, CREATE e USE database", ControllerMySQL.class.getName());
-
-        con.execute("CREATE DATABASE IF NOT EXIST datasaneBD");
-        con.execute("USE datasaneBD");
-
+        con.execute("CREATE DATABASE IF NOT EXIST %s".formatted(nameDatabase));
+        con.execute("USE %s".formatted(nameDatabase));
         mainLogger.setLog(3, "DROP e CREATE tabelas Municipios", ControllerMySQL.class.getName());
 
+        setVariableControl(nameTable, "MunicipiosBase", "MunicipiosTratada")
+        con.execute("DROP TABLE IF EXISTS %s".formatted(nameTable));
 
-
-        for (Integer contador = 0; contador <= 1; contador++) {
-            String typeSQL = null;
-
-            if (contador.equals(0)) {
-                typeSQL = "DECIMAL(10,2)";
-                nameTable = "MunicipiosBase";
-            } else {
-                typeSQL = "INT";
-                nameTable = "MunicipiosTratada";
-            }
-
-            con.execute("DROP TABLE IF EXISTS %s".formatted(nameTable));
-            con.execute("""
-                    CREATE TABLE %s(
-                     idMunicipios INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-                     nome VARCHAR(60),
-                     populacaoTotal INT,
-                     populacaoSemLixo %s,
-                     populacaoSemAgua %s,
-                     populacaoSemEsgoto %s,
-                     domicilioSujeitoInundacoes DECIMAL(4,2),
-                     possuiPlanoMunicipal VARCHAR(15));
-                    """.formatted(nameTable, typeSQL, typeSQL, typeSQL));
-        }
+        String typeSQL = null;
+        setVariableControl(typeSQL, "DECIMAL(10,2)", "INT");
+        con.execute("""
+                CREATE TABLE %s(
+                 idMunicipios INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+                 nome VARCHAR(60),
+                 populacaoTotal INT,
+                 populacaoSemLixo %s,
+                 populacaoSemAgua %s,
+                 populacaoSemEsgoto %s,
+                 domicilioSujeitoInundacoes DECIMAL(4,2),
+                 possuiPlanoMunicipal VARCHAR(15));
+                """.formatted(nameTable, typeSQL, typeSQL, typeSQL));
     }
 
     public void insertMunicipios() {
