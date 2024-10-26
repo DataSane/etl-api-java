@@ -1,19 +1,19 @@
 package client.clientMySQL;
 
-public class MunicipiosSelectModel {
+public class MunicipiosTratadaSelectModel {
     private Integer idMunicipios;
     private String nome;
     private Integer populacaoTotal;
-    private Double populacaoSemLixo;
-    private Double populacaoSemAgua;
-    private Double populacaoSemEsgoto;
+    private Integer populacaoSemLixo;
+    private Integer populacaoSemAgua;
+    private Integer populacaoSemEsgoto;
     private Double domicilioSujeitoInundacoes;
     private String possuiPlanoMunicipal;
 
-    public MunicipiosSelectModel() {
+    public MunicipiosTratadaSelectModel() {
     }
 
-    public MunicipiosSelectModel(Integer idMunicipios, String nome, Integer populacaoTotal, Double populacaoSemLixo, Double populacaoSemAgua, Double populacaoSemEsgoto, Double domicilioSujeitoInundacoes, String possuiPlanoMunicipal) {
+    public MunicipiosTratadaSelectModel(Integer idMunicipios, String nome, Integer populacaoTotal, Integer populacaoSemLixo, Integer populacaoSemAgua, Integer populacaoSemEsgoto, Double domicilioSujeitoInundacoes, String possuiPlanoMunicipal) {
         this.idMunicipios = idMunicipios;
         this.nome = nome;
         this.populacaoTotal = populacaoTotal;
@@ -36,15 +36,15 @@ public class MunicipiosSelectModel {
         return populacaoTotal;
     }
 
-    public Double getPopulacaoSemLixo() {
+    public Integer getPopulacaoSemLixo() {
         return populacaoSemLixo;
     }
 
-    public Double getPopulacaoSemAgua() {
+    public Integer getPopulacaoSemAgua() {
         return populacaoSemAgua;
     }
 
-    public Double getPopulacaoSemEsgoto() {
+    public Integer getPopulacaoSemEsgoto() {
         return populacaoSemEsgoto;
     }
 
@@ -68,15 +68,15 @@ public class MunicipiosSelectModel {
         this.populacaoTotal = populacaoTotal;
     }
 
-    public void setPopulacaoSemLixo(Double populacaoSemLixo) {
+    public void setPopulacaoSemLixo(Integer populacaoSemLixo) {
         this.populacaoSemLixo = populacaoSemLixo;
     }
 
-    public void setPopulacaoSemAgua(Double populacaoSemAgua) {
+    public void setPopulacaoSemAgua(Integer populacaoSemAgua) {
         this.populacaoSemAgua = populacaoSemAgua;
     }
 
-    public void setPopulacaoSemEsgoto(Double populacaoSemEsgoto) {
+    public void setPopulacaoSemEsgoto(Integer populacaoSemEsgoto) {
         this.populacaoSemEsgoto = populacaoSemEsgoto;
     }
 

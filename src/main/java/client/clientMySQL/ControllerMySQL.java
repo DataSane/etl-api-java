@@ -20,25 +20,29 @@ public class ControllerMySQL {
 
     Boolean porcentagemAplicada = true;
     String nameDatabase = "datasaneTESTE";
+    String nameTable = null;
 
     List<Municipio> listaMunicipios = new ArrayList<>();
 
-    public String createTableScript() {
+    public void createMunicipios() {
         String sqlType = null;
-        String nameTable = null;
-        String command = null;
 
-        for (Integer counter = 0; counter <= 1; counter++) {
-            sqlType = "DECIMAL(4,2)";
+        mainLogger.setLog(3, "DROP, CREATE e USE database", ControllerMySQL.class.getName());
+        con.execute("CREATE DATABASE IF NOT EXISTS %s".formatted(nameDatabase));
+        con.execute("USE %s".formatted(nameDatabase));
+
+        mainLogger.setLog(3, "DROP e CREATE tabelas Municipios", ControllerMySQL.class.getName());
+        for (Integer table = 1; table <= 2; table++) {
+            sqlType = "DECIMAL(5,2)";
             nameTable = "municipiosBase";
 
-            if (counter.equals(1)) {
+            if (table.equals(2)) {
                 sqlType = "INT";
                 nameTable = "municipiosTratada";
             }
 
             con.execute("DROP TABLE IF EXISTS %s".formatted(nameTable));
-            command = """
+            String createTable = """
                     CREATE TABLE %s(
                      idMunicipios INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
                      nome VARCHAR(60),
@@ -46,22 +50,12 @@ public class ControllerMySQL {
                      populacaoSemLixo %s,
                      populacaoSemAgua %s,
                      populacaoSemEsgoto %s,
-                     domicilioSujeitoInundacoes DECIMAL(4,2),
+                     domicilioSujeitoInundacoes DECIMAL(5,2),
                      possuiPlanoMunicipal VARCHAR(15));
                     """.formatted(nameTable, sqlType, sqlType, sqlType);
+
+            con.execute(createTable);
         }
-        return command;
-    }
-
-    public void createMunicipios() {
-        mainLogger.setLog(3, "DROP, CREATE e USE database", ControllerMySQL.class.getName());
-        con.execute("CREATE DATABASE IF NOT EXISTS %s".formatted(nameDatabase));
-        con.execute("USE %s".formatted(nameDatabase));
-
-        mainLogger.setLog(3, "DROP e CREATE tabelas Municipios", ControllerMySQL.class.getName());
-
-        String createTable = createTableScript();
-        con.execute(createTable);
     }
 
     public void insertMunicipios() {
@@ -75,32 +69,67 @@ public class ControllerMySQL {
 
         mainLogger.setLog(3, "Iniciando inserção dos objetos no Banco", ControllerMySQL.class.getName());
 
-        for (Municipio municipio : listaMunicipios) {
-            con.update("INSERT INTO Municipios VALUES (DEFAULT, ?, ?, ?, ?, ?, ?, ?)", municipio.getMunicipio(), municipio.getPopulacao(), municipio.getPopulacaoSemColetaDeLixo(),
-                    municipio.getPopulacaoSemAgua(), municipio.getPopulacaoSemEsgoto(), municipio.getDomiciliosSujeitosAInundacao(), municipio.getPlanoMunicipal()
-            );
+        for (Integer table = 1; table <= 2; table++) {
+            nameTable = "municipiosBase";
+
+            if (table.equals(2)) {
+                nameTable = "municipiosTratada";
+            }
+
+            String sqlInsertScript = """
+                    INSERT INTO %s VALUES (DEFAULT, ?, ?, ?, ?, ?, ?, ?)""".formatted(nameTable);
+
+            for (Municipio municipio : listaMunicipios) {
+                con.update(sqlInsertScript, municipio.getMunicipio(), municipio.getPopulacao(), municipio.getPopulacaoSemColetaDeLixo(),
+                        municipio.getPopulacaoSemAgua(), municipio.getPopulacaoSemEsgoto(), municipio.getDomiciliosSujeitosAInundacao(), municipio.getPlanoMunicipal()
+                );
+            }
         }
 
         mainLogger.setLog(3, "Todos objetos inseridos no Banco", ControllerMySQL.class.getName());
     }
 
     public void selectMunicipios() {
-        List<MunicipiosSelectModel> municipios = con.query("SELECT * FROM ", new BeanPropertyRowMapper<>(MunicipiosSelectModel.class));
+        List<MunicipiosBaseSelectModel> municipiosBase = con.query("SELECT * FROM municipiosBase", new BeanPropertyRowMapper<>(MunicipiosBaseSelectModel.class));
+        List<MunicipiosTratadaSelectModel> municipiosTratada = con.query("SELECT * FROM municipiosTratada", new BeanPropertyRowMapper<>(MunicipiosTratadaSelectModel.class));
 
         mainLogger.setLog(3, "Exibindo dados da tabela MySQL", ControllerMySQL.class.getName());
-        for (MunicipiosSelectModel municipio : municipios) {
-            System.out.println("""
-                    idMunicipios: %d
-                    nome: %s
-                    populacaoTotal: %d
-                    populacaoSemLixo: %.2f
-                    populacaoSemAgua: %.2f
-                    populacaoSemEsgoto: %.2f
-                    domicilioSujeitoInundacoes: %.2f
-                    possuiPlanoMunicipal: %s
-                    """.formatted(municipio.getIdMunicipios(), municipio.getNome(), municipio.getPopulacaoTotal(), municipio.getPopulacaoSemLixo(),
-                    municipio.getPopulacaoSemAgua(), municipio.getPopulacaoSemEsgoto(), municipio.getDomicilioSujeitoInundacoes(), municipio.getPossuiPlanoMunicipal()));
+
+        for (Integer table = 1; table <= 2; table++) {
+            if (table.equals(1)) {
+                for (MunicipiosBaseSelectModel municipio : municipiosBase) {
+                    System.out.println("""
+                            idMunicipios: %d
+                            nome: %s
+                            populacaoTotal: %d
+                            populacaoSemLixo: %.2f
+                            populacaoSemAgua: %.2f
+                            populacaoSemEsgoto: %.2f
+                            domicilioSujeitoInundacoes: %.2f
+                            possuiPlanoMunicipal: %s
+                            """.formatted(municipio.getIdMunicipios(), municipio.getNome(), municipio.getPopulacaoTotal(), municipio.getPopulacaoSemLixo(),
+                            municipio.getPopulacaoSemAgua(), municipio.getPopulacaoSemEsgoto(), municipio.getDomicilioSujeitoInundacoes(),
+                            municipio.getPossuiPlanoMunicipal()));
+                }
+            } else {
+                for (MunicipiosTratadaSelectModel municipio : municipiosTratada) {
+                    System.out.println("""
+                            idMunicipios: %d
+                            nome: %s
+                            populacaoTotal: %d
+                            populacaoSemLixo: %s
+                            populacaoSemAgua: %s
+                            populacaoSemEsgoto: %s
+                            domicilioSujeitoInundacoes: %s
+                            possuiPlanoMunicipal: %s
+                            """.formatted(municipio.getIdMunicipios(), municipio.getNome(), municipio.getPopulacaoTotal(), municipio.getPopulacaoSemLixo(),
+                            municipio.getPopulacaoSemAgua(), municipio.getPopulacaoSemEsgoto(), municipio.getDomicilioSujeitoInundacoes(),
+                            municipio.getPossuiPlanoMunicipal()));
+                }
+            }
+
         }
+
         mainLogger.setLog(3, "Exibição de objetos finalizada", ControllerMySQL.class.getName());
     }
 }
