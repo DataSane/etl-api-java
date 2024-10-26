@@ -19,43 +19,49 @@ public class ControllerMySQL {
     LogHandler mainLogger = new LogHandler(); // intancia, pra usar o método
 
     Boolean porcentagemAplicada = true;
-    String nameDatabase = null;
-    String nameTable = null;
+    String nameDatabase = "datasaneTESTE";
 
     List<Municipio> listaMunicipios = new ArrayList<>();
 
-    public String setVariableControl(String variable, String firstValue, String secondValue) {
-        for (Integer counter = 0; counter <= 2; counter++) {
-            if (counter.equals(0)) {
-                return variable = firstValue;
-            } else {
-                return variable = secondValue;
+    public String createTableScript() {
+        String sqlType = null;
+        String nameTable = null;
+        String command = null;
+
+        for (Integer counter = 0; counter <= 1; counter++) {
+            sqlType = "DECIMAL(4,2)";
+            nameTable = "municipiosBase";
+
+            if (counter.equals(1)) {
+                sqlType = "INT";
+                nameTable = "municipiosTratada";
             }
+
+            con.execute("DROP TABLE IF EXISTS %s".formatted(nameTable));
+            command = """
+                    CREATE TABLE %s(
+                     idMunicipios INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+                     nome VARCHAR(60),
+                     populacaoTotal INT,
+                     populacaoSemLixo %s,
+                     populacaoSemAgua %s,
+                     populacaoSemEsgoto %s,
+                     domicilioSujeitoInundacoes DECIMAL(4,2),
+                     possuiPlanoMunicipal VARCHAR(15));
+                    """.formatted(nameTable, sqlType, sqlType, sqlType);
         }
+        return command;
     }
 
     public void createMunicipios() {
         mainLogger.setLog(3, "DROP, CREATE e USE database", ControllerMySQL.class.getName());
-        con.execute("CREATE DATABASE IF NOT EXIST %s".formatted(nameDatabase));
+        con.execute("CREATE DATABASE IF NOT EXISTS %s".formatted(nameDatabase));
         con.execute("USE %s".formatted(nameDatabase));
+
         mainLogger.setLog(3, "DROP e CREATE tabelas Municipios", ControllerMySQL.class.getName());
 
-        setVariableControl(nameTable, "MunicipiosBase", "MunicipiosTratada")
-        con.execute("DROP TABLE IF EXISTS %s".formatted(nameTable));
-
-        String typeSQL = null;
-        setVariableControl(typeSQL, "DECIMAL(10,2)", "INT");
-        con.execute("""
-                CREATE TABLE %s(
-                 idMunicipios INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-                 nome VARCHAR(60),
-                 populacaoTotal INT,
-                 populacaoSemLixo %s,
-                 populacaoSemAgua %s,
-                 populacaoSemEsgoto %s,
-                 domicilioSujeitoInundacoes DECIMAL(4,2),
-                 possuiPlanoMunicipal VARCHAR(15));
-                """.formatted(nameTable, typeSQL, typeSQL, typeSQL));
+        String createTable = createTableScript();
+        con.execute(createTable);
     }
 
     public void insertMunicipios() {
