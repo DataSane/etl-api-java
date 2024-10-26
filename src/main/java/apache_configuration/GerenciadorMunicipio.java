@@ -78,7 +78,7 @@ public class GerenciadorMunicipio {
                     .domiciliosSujeitosAInundacao(domiciliosSujeitosAInundacaoMunicipio)
                     .build();
 
-            // adiciona o objeto criado na lista de usuarios
+            // adiciona o objeto criado na lista de municipios
             municipios.add(municipio);
         });
         return municipios;
