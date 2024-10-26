@@ -45,7 +45,6 @@ public class GerenciadorMunicipio {
         rows.forEach(row -> {
             // Percorre cada celular da linha e, adiciona cada celula da linha atual em uma lista
             List<Cell> cells = (List<Cell>) toList(row.cellIterator());
-            Municipio municipio = null;
 
             String nomeMunicipio = cells.get(0).getStringCellValue();
             String estadoMunicipio = cells.get(1).getStringCellValue();
@@ -67,7 +66,7 @@ public class GerenciadorMunicipio {
             }
 
             // Criando objetos com o total de pessoas afetadas
-            municipio = Municipio.builder()
+            Municipio municipio = Municipio.builder()
                     .municipio(nomeMunicipio)
                     .estado(estadoMunicipio)
                     .populacao(populacaoMunicipio)

@@ -19,7 +19,7 @@ public class ControllerMySQL {
     LogHandler mainLogger = new LogHandler(); // intancia, pra usar o método
 
     Boolean porcentagemAplicada = true;
-    String nameDatabase = conexao.getNameDatabase();
+    String nameDatabase = "datasaneTESTE";
     String nameTable = null;
 
     List<Municipio> listaMunicipios = new ArrayList<>();
@@ -33,7 +33,7 @@ public class ControllerMySQL {
 
         mainLogger.setLog(3, "DROP e CREATE tabelas Municipios", ControllerMySQL.class.getName());
         for (Integer table = 1; table <= 2; table++) {
-            sqlType = "DECIMAL(5,2)";
+            sqlType = "DECIMAL(4,2)";
             nameTable = "municipiosBase";
 
             if (table.equals(2)) {
@@ -50,7 +50,7 @@ public class ControllerMySQL {
                      populacaoSemLixo %s,
                      populacaoSemAgua %s,
                      populacaoSemEsgoto %s,
-                     domicilioSujeitoInundacoes DECIMAL(5,2),
+                     domicilioSujeitoInundacoes DECIMAL(4,2),
                      possuiPlanoMunicipal VARCHAR(15));
                     """.formatted(nameTable, sqlType, sqlType, sqlType);
 
@@ -59,25 +59,29 @@ public class ControllerMySQL {
     }
 
     public void insertMunicipios() {
-        try {
-            listaMunicipios = gerenciadorMunicipio.criar(!porcentagemAplicada);
-            listaMunicipios = gerenciadorMunicipio.criar(porcentagemAplicada);
-            mainLogger.setLog(3, "Células lidas com sucesso", ControllerMySQL.class.getName());
-        } catch (IOException ex) {
-            mainLogger.setLog(1, ex.getMessage(), ControllerMySQL.class.getName());
-        }
-
         mainLogger.setLog(3, "Iniciando inserção dos objetos no Banco", ControllerMySQL.class.getName());
 
         for (Integer table = 1; table <= 2; table++) {
-            nameTable = "municipiosBase";
 
-            if (table.equals(2)) {
-                nameTable = "municipiosTratada";
+            if (table.equals(1)) {
+                try {
+                    listaMunicipios = gerenciadorMunicipio.criar(!porcentagemAplicada);
+                    nameTable = "municipiosBase";
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            } else {
+                try {
+                    listaMunicipios = gerenciadorMunicipio.criar(porcentagemAplicada);
+                    nameTable = "municipiosTratada";
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
 
             String sqlInsertScript = """
                     INSERT INTO %s VALUES (DEFAULT, ?, ?, ?, ?, ?, ?, ?)""".formatted(nameTable);
+
 
             for (Municipio municipio : listaMunicipios) {
                 con.update(sqlInsertScript, municipio.getMunicipio(), municipio.getPopulacao(), municipio.getPopulacaoSemColetaDeLixo(),
@@ -117,10 +121,10 @@ public class ControllerMySQL {
                             idMunicipios: %d
                             nome: %s
                             populacaoTotal: %d
-                            populacaoSemLixo: %s
-                            populacaoSemAgua: %s
-                            populacaoSemEsgoto: %s
-                            domicilioSujeitoInundacoes: %s
+                            populacaoSemLixo: %d
+                            populacaoSemAgua: %d
+                            populacaoSemEsgoto: %d
+                            domicilioSujeitoInundacoes: %.2f
                             possuiPlanoMunicipal: %s
                             """.formatted(municipio.getIdMunicipios(), municipio.getNome(), municipio.getPopulacaoTotal(), municipio.getPopulacaoSemLixo(),
                             municipio.getPopulacaoSemAgua(), municipio.getPopulacaoSemEsgoto(), municipio.getDomicilioSujeitoInundacoes(),
