@@ -6,6 +6,7 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
+
 public class Municipio {
     private String municipio;
     private String estado;
@@ -15,6 +16,8 @@ public class Municipio {
     private Double populacaoSemEsgoto;
     private Double populacaoSemColetaDeLixo;
     private Double domiciliosSujeitosAInundacao;
+
 }
+
 
 

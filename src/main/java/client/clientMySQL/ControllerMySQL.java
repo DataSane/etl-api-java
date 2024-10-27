@@ -19,7 +19,7 @@ public class ControllerMySQL {
     LogHandler mainLogger = new LogHandler(); // intancia, pra usar o método
 
     Boolean porcentagemAplicada = true;
-    String nameDatabase = "datasaneTESTE";
+    String nameDatabase = System.getenv("DB_NAME");;
     String nameTable = null;
 
     List<Municipio> listaMunicipios = new ArrayList<>();
