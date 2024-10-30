@@ -56,7 +56,6 @@ public class ControllerMySQL {
                         """.formatted(nameTable);
             }
 
-
             con.execute(createTable);
         }
     }
