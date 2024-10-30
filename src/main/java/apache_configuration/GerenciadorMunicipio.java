@@ -33,52 +33,56 @@ public class GerenciadorMunicipio {
         return municipios;
     }
 
-    public void criar() throws IOException {
-        ControllerBucket appBucket = new ControllerBucket();
+    public void criar() {
+        try {
+            ControllerBucket appBucket = new ControllerBucket();
 
-        // Recuperando arquivo xls
-        @Cleanup // Essa anotation fecha o arquivo após ser executado - usada no lugar do try catch
-        InputStream file = appBucket.downloadS3();
+            // Recuperando arquivo xls
+            @Cleanup // Essa anotation fecha o arquivo após ser executado - usada no lugar do try catch
+            InputStream file = appBucket.downloadS3();
 
-        Workbook workbook = new HSSFWorkbook(file); // Pega a planilha
+            Workbook workbook = new HSSFWorkbook(file); // Pega a planilha
 
-        // Indica a aba da planilha
-        Sheet sheet = workbook.getSheetAt(0);
+            // Indica a aba da planilha
+            Sheet sheet = workbook.getSheetAt(0);
 
-        // Percorre cada linha que tem na planilha, e adiciona em uma lista
-        List<Row> rows = (List<Row>) toList(sheet.iterator());
-        // Remover os cabeçalhos
-        rows.remove(0);
+            // Percorre cada linha que tem na planilha, e adiciona em uma lista
+            List<Row> rows = (List<Row>) toList(sheet.iterator());
+            // Remover os cabeçalhos
+            rows.remove(0);
 
 
-        rows.forEach(row -> {
-            // Percorre cada celular da linha e, adiciona cada celula da linha atual em uma lista
-            List<Cell> cells = (List<Cell>) toList(row.cellIterator());
+            rows.forEach(row -> {
+                // Percorre cada celular da linha e, adiciona cada celula da linha atual em uma lista
+                List<Cell> cells = (List<Cell>) toList(row.cellIterator());
 
-            String nomeMunicipio = cells.get(0).getStringCellValue();
-            String estadoMunicipio = cells.get(1).getStringCellValue();
-            Integer populacaoMunicipio = (int) cells.get(2).getNumericCellValue();
-            String planoMunicipio = cells.get(3).getStringCellValue();
-            Double populacaoSemAguaMunicipio = convertTypeValue(cells.get(4));
-            Double populacaoSemEsgotoMunicipio = convertTypeValue(cells.get(5));
-            Double populacaoSemColetaDeLixoMunicipio = convertTypeValue(cells.get(6));
-            Double domiciliosSujeitosAInundacaoMunicipio = convertTypeValue(cells.get(7));
+                String nomeMunicipio = cells.get(0).getStringCellValue();
+                String estadoMunicipio = cells.get(1).getStringCellValue();
+                Integer populacaoMunicipio = (int) cells.get(2).getNumericCellValue();
+                String planoMunicipio = cells.get(3).getStringCellValue();
+                Double populacaoSemAguaMunicipio = convertTypeValue(cells.get(4));
+                Double populacaoSemEsgotoMunicipio = convertTypeValue(cells.get(5));
+                Double populacaoSemColetaDeLixoMunicipio = convertTypeValue(cells.get(6));
+                Double domiciliosSujeitosAInundacaoMunicipio = convertTypeValue(cells.get(7));
 
-            // Criando objetos com o total de pessoas afetadas
-            Municipio municipio = Municipio.builder()
-                    .municipio(nomeMunicipio)
-                    .estado(estadoMunicipio)
-                    .populacao(populacaoMunicipio)
-                    .planoMunicipal(planoMunicipio)
-                    .populacaoSemAgua(populacaoSemAguaMunicipio)// Pegando o tipo para validar o campo que está vindo da planilha
-                    .populacaoSemEsgoto(populacaoSemEsgotoMunicipio)
-                    .populacaoSemColetaDeLixo(populacaoSemColetaDeLixoMunicipio)
-                    .domiciliosSujeitosAInundacao(domiciliosSujeitosAInundacaoMunicipio)
-                    .build();
+                // Criando objetos com o total de pessoas afetadas
+                Municipio municipio = Municipio.builder()
+                        .municipio(nomeMunicipio)
+                        .estado(estadoMunicipio)
+                        .populacao(populacaoMunicipio)
+                        .planoMunicipal(planoMunicipio)
+                        .populacaoSemAgua(populacaoSemAguaMunicipio)// Pegando o tipo para validar o campo que está vindo da planilha
+                        .populacaoSemEsgoto(populacaoSemEsgotoMunicipio)
+                        .populacaoSemColetaDeLixo(populacaoSemColetaDeLixoMunicipio)
+                        .domiciliosSujeitosAInundacao(domiciliosSujeitosAInundacaoMunicipio)
+                        .build();
 
-            // adiciona o objeto criado na lista de municipios
-            municipios.add(municipio);
-        });
+                // adiciona o objeto criado na lista de municipios
+                municipios.add(municipio);
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public Double calculateAverage(String areaSaneamentoBasico) {

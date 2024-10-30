@@ -10,12 +10,8 @@ import java.io.IOException;
 public class Main {
     public static void main(String[] args) throws IOException {
         ControllerMySQL controllerMySQL = new ControllerMySQL();
-        GerenciadorMunicipio gerenciador = new GerenciadorMunicipio();
-//
-//        gerenciador.criar();
-//        System.out.println(gerenciador.calculateAverage("populacaoSemColetaDeLixo"));
+
         controllerMySQL.createTables();
         controllerMySQL.insertMunicipios();
-//        controllerMySQL.selectMunicipios();
     };
 }

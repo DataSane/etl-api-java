@@ -61,92 +61,37 @@ public class ControllerMySQL {
 
     public void insertMunicipios() {
         mainLogger.setLog(3, "Iniciando inserção dos objetos no Banco", ControllerMySQL.class.getName());
+        gerenciadorMunicipio.criar();
         listaMunicipios = gerenciadorMunicipio.getMunicipios();
 
         for (Municipio municipio : listaMunicipios) {
-            try {
-                gerenciadorMunicipio.criar();
+            nameTable = "municipios";
+            String sqlInsertScript = """
+                    INSERT INTO %s VALUES (DEFAULT, ?, ?, ?, ?, ?, ?, ?)""".formatted(nameTable);
 
-                nameTable = "municipios";
-                String sqlInsertScript = """
-                        INSERT INTO %s VALUES (DEFAULT, ?, ?, ?, ?, ?, ?, ?)""".formatted(nameTable);
-
-                con.update(sqlInsertScript, municipio.getMunicipio(), municipio.getPopulacao(), municipio.getPopulacaoSemColetaDeLixo(),
-                        municipio.getPopulacaoSemAgua(), municipio.getPopulacaoSemEsgoto(), municipio.getDomiciliosSujeitosAInundacao(),
-                        municipio.getPlanoMunicipal());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            con.update(sqlInsertScript, municipio.getMunicipio(), municipio.getPopulacao(), municipio.getPopulacaoSemColetaDeLixo(),
+                    municipio.getPopulacaoSemAgua(), municipio.getPopulacaoSemEsgoto(), municipio.getDomiciliosSujeitosAInundacao(),
+                    municipio.getPlanoMunicipal());
         }
 
-//        for (Integer contador = 1; contador <= 3; contador++) {
-//            try {
-//                gerenciadorMunicipio.criar();
-//
-//                nameTable = "indicadores";
-//                String nameIndicador = "populacaoSemColetaDeLixo";
-//
-//                if (contador.equals(2)) {
-//                    nameIndicador = "populacaoSemAgua";
-//                }
-//
-//                if (contador.equals(3)) {
-//                    nameIndicador = "populacaoSemEsgoto";
-//                }
-//
-//                String sqlInsertScript = """
-//                        INSERT INTO %s VALUES (DEFAULT, ?, ?)""".formatted(nameTable);
-//                Double averageIndicador = gerenciadorMunicipio.calculateAverage(nameIndicador);
-//
-//                con.update(sqlInsertScript, nameIndicador, averageIndicador);
-//            } catch (IOException e) {
-//                throw new RuntimeException(e);
-//            }
-//        }
+        for (Integer contador = 1; contador <= 3; contador++) {
+            nameTable = "indicadores";
+            String nameIndicador = "populacaoSemColetaDeLixo";
+
+            if (contador.equals(2)) {
+                nameIndicador = "populacaoSemAgua";
+            }
+
+            if (contador.equals(3)) {
+                nameIndicador = "populacaoSemEsgoto";
+            }
+
+            String sqlInsertScript = """
+                    INSERT INTO %s VALUES (DEFAULT, ?, ?)""".formatted(nameTable);
+            Double averageIndicador = gerenciadorMunicipio.calculateAverage(nameIndicador);
+
+            con.update(sqlInsertScript, nameIndicador, averageIndicador);
+        }
         mainLogger.setLog(3, "Todos objetos inseridos no Banco", ControllerMySQL.class.getName());
-    }
-
-    public void selectMunicipios() {
-        List<MunicipiosBaseSelectModel> municipiosBase = con.query("SELECT * FROM municipiosBase", new BeanPropertyRowMapper<>(MunicipiosBaseSelectModel.class));
-        List<MunicipiosTratadaSelectModel> municipiosTratada = con.query("SELECT * FROM municipiosTratada", new BeanPropertyRowMapper<>(MunicipiosTratadaSelectModel.class));
-
-        mainLogger.setLog(3, "Exibindo dados da tabela MySQL", ControllerMySQL.class.getName());
-
-        for (Integer table = 1; table <= 2; table++) {
-            if (table.equals(1)) {
-                for (MunicipiosBaseSelectModel municipio : municipiosBase) {
-                    System.out.println("""
-                            idMunicipios: %d
-                            nome: %s
-                            populacaoTotal: %d
-                            populacaoSemLixo: %f
-                            populacaoSemAgua: %.2f
-                            populacaoSemEsgoto: %.2f
-                            domicilioSujeitoInundacoes: %.2f
-                            possuiPlanoMunicipal: %s
-                            """.formatted(municipio.getIdMunicipios(), municipio.getNome(), municipio.getPopulacaoTotal(), municipio.getPopulacaoSemLixo(),
-                            municipio.getPopulacaoSemAgua(), municipio.getPopulacaoSemEsgoto(), municipio.getDomicilioSujeitoInundacoes(),
-                            municipio.getPossuiPlanoMunicipal()));
-                }
-            } else {
-                for (MunicipiosTratadaSelectModel municipio : municipiosTratada) {
-                    System.out.println("""
-                            idMunicipios: %d
-                            nome: %s
-                            populacaoTotal: %d
-                            populacaoSemLixo: %d
-                            populacaoSemAgua: %d
-                            populacaoSemEsgoto: %d
-                            domicilioSujeitoInundacoes: %.2f
-                            possuiPlanoMunicipal: %s
-                            """.formatted(municipio.getIdMunicipios(), municipio.getNome(), municipio.getPopulacaoTotal(), municipio.getPopulacaoSemLixo(),
-                            municipio.getPopulacaoSemAgua(), municipio.getPopulacaoSemEsgoto(), municipio.getDomicilioSujeitoInundacoes(),
-                            municipio.getPossuiPlanoMunicipal()));
-                }
-            }
-
-        }
-
-        mainLogger.setLog(3, "Exibição de objetos finalizada", ControllerMySQL.class.getName());
     }
 }
