@@ -20,7 +20,6 @@ public class ControllerMySQL {
 
     Boolean porcentagemAplicada = true;
     String nameDatabase = "datasaneTESTE";
-    ;
     String nameTable = null;
 
     List<Municipio> listaMunicipios = new ArrayList<>();
@@ -33,7 +32,6 @@ public class ControllerMySQL {
         mainLogger.setLog(3, "DROP e CREATE TABLE municipios e indicadores", ControllerMySQL.class.getName());
         for (Integer table = 1; table <= 2; table++) {
             nameTable = "municipios";
-            con.execute("DROP TABLE IF EXISTS %s".formatted(nameTable));
             String createTable = """
                     CREATE TABLE %s (
                      idMunicipios INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
@@ -56,6 +54,7 @@ public class ControllerMySQL {
                         """.formatted(nameTable);
             }
 
+            con.execute("DROP TABLE IF EXISTS %s".formatted(nameTable));
             con.execute(createTable);
         }
     }

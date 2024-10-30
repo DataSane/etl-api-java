@@ -781,3 +781,105 @@ INFO: Exibição de objetos finalizada
 out. 29, 2024 8:40:52 PM logs_config.LogHandler setLog
 INFO: DROP, CREATE e USE database
 
+out. 30, 2024 11:06:06 AM logs_config.LogHandler setLog
+INFO: DROP, CREATE e USE database
+
+out. 30, 2024 11:07:18 AM logs_config.LogHandler setLog
+INFO: DROP, CREATE e USE database
+
+out. 30, 2024 11:07:49 AM logs_config.LogHandler setLog
+INFO: DROP, CREATE e USE database
+
+out. 30, 2024 11:09:12 AM logs_config.LogHandler setLog
+INFO: DROP, CREATE e USE database
+
+out. 30, 2024 11:09:59 AM logs_config.LogHandler setLog
+INFO: DROP, CREATE e USE database
+
+out. 30, 2024 11:11:43 AM logs_config.LogHandler setLog
+INFO: DROP, CREATE e USE database
+
+out. 30, 2024 11:15:57 AM logs_config.LogHandler setLog
+INFO: DROP, CREATE e USE database
+
+out. 30, 2024 11:27:37 AM logs_config.LogHandler setLog
+INFO: DROP, CREATE e USE database
+
+out. 30, 2024 11:28:17 AM logs_config.LogHandler setLog
+INFO: DROP, CREATE e USE database
+
+out. 30, 2024 11:28:18 AM logs_config.LogHandler setLog
+INFO: DROP e CREATE TABLE municipios e indicadores
+
+out. 30, 2024 11:28:18 AM logs_config.LogHandler setLog
+INFO: Iniciando inserção dos objetos no Banco
+
+out. 30, 2024 11:28:18 AM logs_config.LogHandler setLog
+INFO: Todos objetos inseridos no Banco
+
+out. 30, 2024 11:29:55 AM logs_config.LogHandler setLog
+INFO: DROP, CREATE e USE database
+
+out. 30, 2024 11:29:55 AM logs_config.LogHandler setLog
+INFO: DROP e CREATE TABLE municipios e indicadores
+
+out. 30, 2024 11:30:24 AM logs_config.LogHandler setLog
+INFO: DROP, CREATE e USE database
+
+out. 30, 2024 11:30:25 AM logs_config.LogHandler setLog
+INFO: DROP e CREATE TABLE municipios e indicadores
+
+out. 30, 2024 11:31:20 AM logs_config.LogHandler setLog
+INFO: DROP, CREATE e USE database
+
+out. 30, 2024 11:31:21 AM logs_config.LogHandler setLog
+INFO: DROP e CREATE TABLE municipios e indicadores
+
+out. 30, 2024 11:31:34 AM logs_config.LogHandler setLog
+INFO: DROP, CREATE e USE database
+
+out. 30, 2024 11:31:35 AM logs_config.LogHandler setLog
+INFO: DROP e CREATE TABLE municipios e indicadores
+
+out. 30, 2024 11:31:51 AM logs_config.LogHandler setLog
+INFO: DROP, CREATE e USE database
+
+out. 30, 2024 11:31:52 AM logs_config.LogHandler setLog
+INFO: DROP e CREATE TABLE municipios e indicadores
+
+out. 30, 2024 11:31:52 AM logs_config.LogHandler setLog
+INFO: Iniciando inserção dos objetos no Banco
+
+out. 30, 2024 11:31:52 AM logs_config.LogHandler setLog
+INFO: Todos objetos inseridos no Banco
+
+out. 30, 2024 11:32:38 AM logs_config.LogHandler setLog
+INFO: DROP, CREATE e USE database
+
+out. 30, 2024 11:32:38 AM logs_config.LogHandler setLog
+INFO: DROP e CREATE TABLE municipios e indicadores
+
+out. 30, 2024 11:39:50 AM logs_config.LogHandler setLog
+INFO: DROP, CREATE e USE database
+
+out. 30, 2024 11:39:50 AM logs_config.LogHandler setLog
+INFO: DROP e CREATE TABLE municipios e indicadores
+
+out. 30, 2024 11:39:51 AM logs_config.LogHandler setLog
+INFO: Iniciando inserção dos objetos no Banco
+
+out. 30, 2024 11:39:51 AM logs_config.LogHandler setLog
+INFO: Todos objetos inseridos no Banco
+
+out. 30, 2024 11:42:56 AM logs_config.LogHandler setLog
+INFO: DROP, CREATE e USE database
+
+out. 30, 2024 11:42:57 AM logs_config.LogHandler setLog
+INFO: DROP e CREATE TABLE municipios e indicadores
+
+out. 30, 2024 11:42:57 AM logs_config.LogHandler setLog
+INFO: Iniciando inserção dos objetos no Banco
+
+out. 30, 2024 11:42:57 AM logs_config.LogHandler setLog
+INFO: Todos objetos inseridos no Banco
+
