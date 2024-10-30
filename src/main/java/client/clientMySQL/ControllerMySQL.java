@@ -62,33 +62,39 @@ public class ControllerMySQL {
 
     public void insertMunicipios() {
         mainLogger.setLog(3, "Iniciando inserção dos objetos no Banco", ControllerMySQL.class.getName());
+        String numberOfInserts;
+        String valuesToInsert;
 
-        for (Integer table = 1; table <= 2; table++) {
-
-            if (table.equals(1)) {
-                try {
-                    gerenciadorMunicipio.criar();
-                    nameTable = "municipiosBase";
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+        for (Municipio municipio : listaMunicipios) {
+            for (Integer table = 1; table <= 2; table++) {
+                if (table.equals(1)) {
+                    try {
+                        gerenciadorMunicipio.criar();
+                        nameTable = "municipios";
+                        numberOfInserts = "?, ?, ?, ?, ?, ?, ?";
+                        valuesToInsert = "municipio.getMunicipio(), municipio.getPopulacao(), municipio.getPopulacaoSemColetaDeLixo()," +
+                                "municipio.getPopulacaoSemAgua(), municipio.getPopulacaoSemEsgoto(), municipio.getDomiciliosSujeitosAInundacao(), " +
+                                "municipio.getPlanoMunicipal()";
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                } else {
+                    try {
+                        gerenciadorMunicipio.criar();
+                        nameTable = "indicadores";
+                        numberOfInserts = "?, ?";
+                        valuesToInsert = "municipio.getMunicipio(), municipio.getPopulacao(), municipio.getPopulacaoSemColetaDeLixo()," +
+                                "municipio.getPopulacaoSemAgua(), municipio.getPopulacaoSemEsgoto(), municipio.getDomiciliosSujeitosAInundacao(), " +
+                                "municipio.getPlanoMunicipal()";
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
-            } else {
-                try {
-                    gerenciadorMunicipio.criar();
-                    nameTable = "municipiosTratada";
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
 
-            String sqlInsertScript = """
-                    INSERT INTO %s VALUES (DEFAULT, ?, ?, ?, ?, ?, ?, ?)""".formatted(nameTable);
+                String sqlInsertScript = """
+                        INSERT INTO %s VALUES (DEFAULT, %s)""".formatted(nameTable, numberOfInserts);
 
-
-            for (Municipio municipio : listaMunicipios) {
-                con.update(sqlInsertScript, municipio.getMunicipio(), municipio.getPopulacao(), municipio.getPopulacaoSemColetaDeLixo(),
-                        municipio.getPopulacaoSemAgua(), municipio.getPopulacaoSemEsgoto(), municipio.getDomiciliosSujeitosAInundacao(), municipio.getPlanoMunicipal()
-                );
+                con.update(sqlInsertScript, valuesToInsert);
             }
         }
 
