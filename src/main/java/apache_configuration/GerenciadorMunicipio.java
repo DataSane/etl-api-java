@@ -29,6 +29,10 @@ public class GerenciadorMunicipio {
      */
     List<Municipio> municipios = new ArrayList<>();
 
+    public List<Municipio> getMunicipios() {
+        return municipios;
+    }
+
     public void criar() throws IOException {
         ControllerBucket appBucket = new ControllerBucket();
 

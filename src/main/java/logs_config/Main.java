@@ -14,7 +14,7 @@ public class Main {
 //
 //        gerenciador.criar();
 //        System.out.println(gerenciador.calculateAverage("populacaoSemColetaDeLixo"));
-        controllerMySQL.createMunicipios();
+        controllerMySQL.createTables();
         controllerMySQL.insertMunicipios();
 //        controllerMySQL.selectMunicipios();
     };
