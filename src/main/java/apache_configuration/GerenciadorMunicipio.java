@@ -1,6 +1,7 @@
 package apache_configuration;
 
 import client.bucketS3.ControllerBucket;
+import client.clientMySQL.MunicipiosBaseSelectModel;
 import lombok.Cleanup;
 import org.apache.commons.collections4.IteratorUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -76,26 +77,37 @@ public class GerenciadorMunicipio {
         });
     }
 
-    public Double mediaSemColetaDeLixo() {
+    public Double calculateAverage(String areaSaneamentoBasico) {
         Integer populacaoTotal = 0;
-        Double populacaoAfetadaSemColetaDeLixo = 0.0;
-        Double populacaoAfetadaSemAgua = 0.0;
-        Double populacaoAfetadaSemEsgoto = 0.0;
+        Double porcentagemArea = 0.0;
+        Double populacaoAfetada = 0.0;
 
         for (Municipio municipio : municipios) {
+            switch (areaSaneamentoBasico) {
+                case "populacaoSemColetaDeLixo":
+                    porcentagemArea = municipio.getPopulacaoSemColetaDeLixo();
+                    break;
+                case "populacaoSemAgua":
+                    porcentagemArea = municipio.getPopulacaoSemAgua();
+                    break;
+                case "populacaoSemEsgoto":
+                    porcentagemArea = municipio.getPopulacaoSemEsgoto();
+            }
+
             populacaoTotal += municipio.getPopulacao();
-            populacaoAfetadaSemColetaDeLixo += municipio.getPopulacaoSemColetaDeLixo() * municipio.getPopulacao();
-            populacaoAfetadaSemAgua += municipio.getPopulacaoSemAgua() * municipio.getPopulacao();
-            populacaoAfetadaSemEsgoto += municipio.getPopulacaoSemEsgoto() * municipio.getPopulacao();
+            populacaoAfetada += porcentagemArea * municipio.getPopulacao();
         }
 
-        Double resultado = (populacaoTotal / populacaoAfetadaSemColetaDeLixo) * 100;
+        return (populacaoTotal / populacaoAfetada) * 100;
 
-        NumberFormat format = NumberFormat.getIntegerInstance(new Locale("pt", "BR"));
-        String valorFormatado = format.format(resultado);
-        Double mediaSemColetaDeLixo = Double.parseDouble(valorFormatado);
-
-        return mediaSemColetaDeLixo;
+//        // Formatando o valor conforme localização da IDE para converter a vírgula (conforme utilizado no Brasil)
+//        // para ponto, permitindo leitura do Java
+//        NumberFormat number = NumberFormat.getNumberInstance(new Locale("pt", "BR"));
+//
+//        number.setMaximumFractionDigits(2); // Estabelecendo o máximo de casas decimais
+//        String mediaEmString = number.format(porcentagemAfetada); // Aplicando a formatação ao valor inserido
+//
+//        return Double.parseDouble(mediaEmString); // return com valor convertido em Double novamente: (##.##)
     }
 
     // Trata os dados de string da planilha

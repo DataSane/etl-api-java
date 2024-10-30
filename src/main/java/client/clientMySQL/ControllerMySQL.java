@@ -19,40 +19,43 @@ public class ControllerMySQL {
     LogHandler mainLogger = new LogHandler(); // intancia, pra usar o método
 
     Boolean porcentagemAplicada = true;
-    String nameDatabase = "datasaneTESTE";;
+    String nameDatabase = "datasaneTESTE";
+    ;
     String nameTable = null;
 
     List<Municipio> listaMunicipios = new ArrayList<>();
 
     public void createMunicipios() {
-        String sqlType = null;
-
         mainLogger.setLog(3, "DROP, CREATE e USE database", ControllerMySQL.class.getName());
         con.execute("CREATE DATABASE IF NOT EXISTS %s".formatted(nameDatabase));
         con.execute("USE %s".formatted(nameDatabase));
 
-        mainLogger.setLog(3, "DROP e CREATE tabelas Municipios", ControllerMySQL.class.getName());
+        mainLogger.setLog(3, "DROP e CREATE TABLE municipios e indicadores", ControllerMySQL.class.getName());
         for (Integer table = 1; table <= 2; table++) {
-            sqlType = "DECIMAL(4,2)";
-            nameTable = "municipiosBase";
-
-            if (table.equals(2)) {
-                sqlType = "INT";
-                nameTable = "municipiosTratada";
-            }
-
+            nameTable = "municipios";
             con.execute("DROP TABLE IF EXISTS %s".formatted(nameTable));
             String createTable = """
-                    CREATE TABLE %s(
+                    CREATE TABLE %s (
                      idMunicipios INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
                      nome VARCHAR(60),
                      populacaoTotal INT,
-                     populacaoSemLixo %s,
-                     populacaoSemAgua %s,
-                     populacaoSemEsgoto %s,
+                     populacaoSemLixo DECIMAL(4,2),
+                     populacaoSemAgua DECIMAL(4,2),
+                     populacaoSemEsgoto DECIMAL(4,2),
                      domicilioSujeitoInundacoes DECIMAL(4,2),
                      possuiPlanoMunicipal VARCHAR(15));
-                    """.formatted(nameTable, sqlType, sqlType, sqlType);
+                    """.formatted(nameTable);
+
+            if (table.equals(2)) {
+                nameTable = "indicadores";
+                createTable = """
+                        CREATE TABLE %s (
+                        idIndicadores INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+                        nome VARCHAR(20),
+                        porcentagem DECIMAL(4,2));
+                        """.formatted(nameTable);
+            }
+
 
             con.execute(createTable);
         }

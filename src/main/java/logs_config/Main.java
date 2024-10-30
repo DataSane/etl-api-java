@@ -13,7 +13,7 @@ public class Main {
         GerenciadorMunicipio gerenciador = new GerenciadorMunicipio();
 
         gerenciador.criar();
-        System.out.println(gerenciador.mediaSemColetaDeLixo());
+        System.out.println(gerenciador.calculateAverage("populacaoSemColetaDeLixo"));
 //        controllerMySQL.createMunicipios();
 //        controllerMySQL.insertMunicipios();
 //        controllerMySQL.selectMunicipios();
