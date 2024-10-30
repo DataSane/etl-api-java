@@ -11,9 +11,12 @@ import org.apache.poi.ss.usermodel.Workbook;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 public class GerenciadorMunicipio {
 
@@ -23,9 +26,10 @@ public class GerenciadorMunicipio {
         ex: chamar o metodo na main dentro de um try catch
     .
      */
-    public List<Municipio> criar(Boolean porcentagemAplicada) throws IOException {
+    List<Municipio> municipios = new ArrayList<>();
+
+    public void criar() throws IOException {
         ControllerBucket appBucket = new ControllerBucket();
-        List<Municipio> municipios = new ArrayList<>();
 
         // Recuperando arquivo xls
         @Cleanup // Essa anotation fecha o arquivo após ser executado - usada no lugar do try catch
@@ -50,20 +54,10 @@ public class GerenciadorMunicipio {
             String estadoMunicipio = cells.get(1).getStringCellValue();
             Integer populacaoMunicipio = (int) cells.get(2).getNumericCellValue();
             String planoMunicipio = cells.get(3).getStringCellValue();
-            Double populacaoSemAguaMunicipio = 0.0;
-            Double populacaoSemEsgotoMunicipio = 0.0;
-            Double populacaoSemColetaDeLixoMunicipio = 0.0;
+            Double populacaoSemAguaMunicipio = convertTypeValue(cells.get(4));
+            Double populacaoSemEsgotoMunicipio = convertTypeValue(cells.get(5));
+            Double populacaoSemColetaDeLixoMunicipio = convertTypeValue(cells.get(6));
             Double domiciliosSujeitosAInundacaoMunicipio = convertTypeValue(cells.get(7));
-
-            if (porcentagemAplicada) {
-                populacaoSemAguaMunicipio = populacaoMunicipio * (convertTypeValue(cells.get(4)) / 100);
-                populacaoSemEsgotoMunicipio = populacaoMunicipio * (convertTypeValue(cells.get(5)) / 100);
-                populacaoSemColetaDeLixoMunicipio = populacaoMunicipio * (convertTypeValue(cells.get(6)) / 100);
-            } else {
-                populacaoSemAguaMunicipio = convertTypeValue(cells.get(4));
-                populacaoSemEsgotoMunicipio = convertTypeValue(cells.get(5));
-                populacaoSemColetaDeLixoMunicipio = convertTypeValue(cells.get(6));
-            }
 
             // Criando objetos com o total de pessoas afetadas
             Municipio municipio = Municipio.builder()
@@ -80,7 +74,28 @@ public class GerenciadorMunicipio {
             // adiciona o objeto criado na lista de municipios
             municipios.add(municipio);
         });
-        return municipios;
+    }
+
+    public Double mediaSemColetaDeLixo() {
+        Integer populacaoTotal = 0;
+        Double populacaoAfetadaSemColetaDeLixo = 0.0;
+        Double populacaoAfetadaSemAgua = 0.0;
+        Double populacaoAfetadaSemEsgoto = 0.0;
+
+        for (Municipio municipio : municipios) {
+            populacaoTotal += municipio.getPopulacao();
+            populacaoAfetadaSemColetaDeLixo += municipio.getPopulacaoSemColetaDeLixo() * municipio.getPopulacao();
+            populacaoAfetadaSemAgua += municipio.getPopulacaoSemAgua() * municipio.getPopulacao();
+            populacaoAfetadaSemEsgoto += municipio.getPopulacaoSemEsgoto() * municipio.getPopulacao();
+        }
+
+        Double resultado = (populacaoTotal / populacaoAfetadaSemColetaDeLixo) * 100;
+
+        NumberFormat format = NumberFormat.getIntegerInstance(new Locale("pt", "BR"));
+        String valorFormatado = format.format(resultado);
+        Double mediaSemColetaDeLixo = Double.parseDouble(valorFormatado);
+
+        return mediaSemColetaDeLixo;
     }
 
     // Trata os dados de string da planilha

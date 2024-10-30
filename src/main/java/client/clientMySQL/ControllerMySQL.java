@@ -19,7 +19,7 @@ public class ControllerMySQL {
     LogHandler mainLogger = new LogHandler(); // intancia, pra usar o método
 
     Boolean porcentagemAplicada = true;
-    String nameDatabase = System.getenv("DB_NAME");;
+    String nameDatabase = "datasaneTESTE";;
     String nameTable = null;
 
     List<Municipio> listaMunicipios = new ArrayList<>();
@@ -65,14 +65,14 @@ public class ControllerMySQL {
 
             if (table.equals(1)) {
                 try {
-                    listaMunicipios = gerenciadorMunicipio.criar(!porcentagemAplicada);
+                    gerenciadorMunicipio.criar();
                     nameTable = "municipiosBase";
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
             } else {
                 try {
-                    listaMunicipios = gerenciadorMunicipio.criar(porcentagemAplicada);
+                    gerenciadorMunicipio.criar();
                     nameTable = "municipiosTratada";
                 } catch (IOException e) {
                     throw new RuntimeException(e);
@@ -106,7 +106,7 @@ public class ControllerMySQL {
                             idMunicipios: %d
                             nome: %s
                             populacaoTotal: %d
-                            populacaoSemLixo: %.2f
+                            populacaoSemLixo: %f
                             populacaoSemAgua: %.2f
                             populacaoSemEsgoto: %.2f
                             domicilioSujeitoInundacoes: %.2f
