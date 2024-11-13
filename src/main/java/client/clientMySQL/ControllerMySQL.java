@@ -33,6 +33,7 @@ public class ControllerMySQL {
 
         String createTable = null;
 
+        con.execute("DROP TABLE IF EXISTS %s".formatted("agrupamentoMunicipios"));
         for (int table = 1; table <= 3; table++) {
             switch (table) {
                 case 1:
@@ -60,13 +61,12 @@ public class ControllerMySQL {
                                 populacaoMax INT,
                                 parametroSemColetaDeLixo DECIMAL(4,2),
                                 parametroSemAgua DECIMAL(4,2),
-                                parametroSemEsgoto DECIMAL(4,2),
-                                parametroSujeitoInundacoes DECIMAL(4,2)
+                                parametroSemEsgoto DECIMAL(4,2)
                             );
                             """.formatted(nameTable);
                     break;
                 case 3:
-                    nameTable = "indicadores";
+                    nameTable = "agrupamentoMunicipios";
                     createTable = """
                             CREATE TABLE %s (
                                 idAgrupamentoMunicipios INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
@@ -78,10 +78,10 @@ public class ControllerMySQL {
                             );
                             """.formatted(nameTable);
             }
-        }
 
-        con.execute("DROP TABLE IF EXISTS %s".formatted(nameTable));
-        con.execute(createTable);
+            con.execute("DROP TABLE IF EXISTS %s".formatted(nameTable));
+            con.execute(createTable);
+        }
     }
 
     public void insertMunicipios() {
@@ -99,29 +99,39 @@ public class ControllerMySQL {
                     municipio.getPlanoMunicipal());
         }
 
-        for (Integer contador = 1; contador <= 4; contador++) {
+        for (int counter = 1; counter <= 4; counter++) {
             nameTable = "tipoMunicipio";
-            String nomeParametro = null;
 
-            switch (contador) {
+            String groupName = null;
+            Integer minPopulation = 0;
+            Integer maxPopulation = 100_000_000;
+
+            Double semColetaDeLixoParameter = gerenciadorMunicipio.calculateAverage("populacaoSemColetaDeLixo");
+            Double semAguaParameter = gerenciadorMunicipio.calculateAverage("populacaoSemAgua");
+            Double semEsgotoParameter = gerenciadorMunicipio.calculateAverage("populacaoSemEsgoto");
+
+            switch (counter) {
                 case 1:
-                    nomeParametro = "Geral";
+                    groupName = "Geral";
                     break;
                 case 2:
-                    nomeParametro = "Pequeno Porte";
+                    groupName = "Pequeno Porte";
+                    maxPopulation = 50_000;
                     break;
                 case 3:
-                    nomeParametro = "Médio Porte";
+                    groupName = "Médio Porte";
+                    minPopulation = 50_001;
+                    maxPopulation = 200_000;
                     break;
                 case 4:
-                    nomeParametro = "Grande Porte";
+                    groupName = "Grande Porte";
+                    minPopulation = 200_001;
             }
 
             String sqlInsertScript = """
-                    INSERT INTO %s VALUES (DEFAULT, %s, 0, 100000000, ?, ?, ?, ?)""".formatted(nameTable, nomeParametro);
-            Double averageIndicador = gerenciadorMunicipio.calculateAverage(nameIndicador);
+                    INSERT INTO %s VALUES (DEFAULT, "%s", %d, %d, ?, ?, ?)""".formatted(nameTable, groupName, minPopulation, maxPopulation);
 
-            con.update(sqlInsertScript, , averageIndicador);
+            con.update(sqlInsertScript, semColetaDeLixoParameter, semAguaParameter, semEsgotoParameter);
         }
         mainLogger.setLog(3, "Todos objetos inseridos no Banco", ControllerMySQL.class.getName());
     }
