@@ -145,6 +145,17 @@ public class ControllerMySQL {
 
             con.update(sqlInsertScript, semColetaDeLixoParameter, semAguaParameter, semEsgotoParameter);
         }
+
+        for (int municipios = 0; municipios <= listaMunicipios.size(); municipios++) {
+            nameTable = "agrupamentoMunicipios";
+
+            String sqlInsertScript = """
+                    INSERT INTO %s VALUES (DEFAULT, ?, ?, ?)""".formatted(nameTable);
+
+            con.update(sqlInsertScript, municipios, semAguaParameter, "geral");
+            con.update(sqlInsertScript, municipios, semAguaParameter, "pequeno");
+        }
+
         mainLogger.setLog(3, "Todos objetos inseridos no Banco", ControllerMySQL.class.getName());
     }
 }
