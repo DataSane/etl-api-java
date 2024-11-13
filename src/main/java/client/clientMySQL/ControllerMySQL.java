@@ -106,25 +106,37 @@ public class ControllerMySQL {
             Integer minPopulation = 0;
             Integer maxPopulation = 100_000_000;
 
-            Double semColetaDeLixoParameter = gerenciadorMunicipio.calculateAverage("populacaoSemColetaDeLixo");
-            Double semAguaParameter = gerenciadorMunicipio.calculateAverage("populacaoSemAgua");
-            Double semEsgotoParameter = gerenciadorMunicipio.calculateAverage("populacaoSemEsgoto");
+            Double semColetaDeLixoParameter = null;
+            Double semAguaParameter = null;
+            Double semEsgotoParameter = null;
 
             switch (counter) {
                 case 1:
                     groupName = "Geral";
+                    semColetaDeLixoParameter = gerenciadorMunicipio.calculateAverage("populacaoSemColetaDeLixo", "geral");
+                    semAguaParameter = gerenciadorMunicipio.calculateAverage("populacaoSemAgua", "geral");
+                    semEsgotoParameter = gerenciadorMunicipio.calculateAverage("populacaoSemEsgoto", "geral");
                     break;
                 case 2:
                     groupName = "Pequeno Porte";
                     maxPopulation = 50_000;
+                    semColetaDeLixoParameter = gerenciadorMunicipio.calculateAverage("populacaoSemColetaDeLixo", "pequeno");
+                    semAguaParameter = gerenciadorMunicipio.calculateAverage("populacaoSemAgua", "pequeno");
+                    semEsgotoParameter = gerenciadorMunicipio.calculateAverage("populacaoSemEsgoto", "pequeno");
                     break;
                 case 3:
                     groupName = "Médio Porte";
                     minPopulation = 50_001;
                     maxPopulation = 200_000;
+                    semColetaDeLixoParameter = gerenciadorMunicipio.calculateAverage("populacaoSemColetaDeLixo", "medio");
+                    semAguaParameter = gerenciadorMunicipio.calculateAverage("populacaoSemAgua", "medio");
+                    semEsgotoParameter = gerenciadorMunicipio.calculateAverage("populacaoSemEsgoto", "medio");
                     break;
                 case 4:
                     groupName = "Grande Porte";
+                    semColetaDeLixoParameter = gerenciadorMunicipio.calculateAverage("populacaoSemColetaDeLixo", "grande");
+                    semAguaParameter = gerenciadorMunicipio.calculateAverage("populacaoSemAgua", "grande");
+                    semEsgotoParameter = gerenciadorMunicipio.calculateAverage("populacaoSemEsgoto", "grande");
                     minPopulation = 200_001;
             }
 
