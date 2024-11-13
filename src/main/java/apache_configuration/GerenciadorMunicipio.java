@@ -1,7 +1,6 @@
 package apache_configuration;
 
 import client.bucketS3.ControllerBucket;
-import client.clientMySQL.MunicipiosBaseSelectModel;
 import lombok.Cleanup;
 import org.apache.commons.collections4.IteratorUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -12,12 +11,9 @@ import org.apache.poi.ss.usermodel.Workbook;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 
 public class GerenciadorMunicipio {
 
@@ -65,7 +61,7 @@ public class GerenciadorMunicipio {
                 Double populacaoSemColetaDeLixoMunicipio = convertTypeValue(cells.get(6));
                 Double domiciliosSujeitosAInundacaoMunicipio = convertTypeValue(cells.get(7));
 
-                // Criando objetos com o total de pessoas afetadas
+                // Criando objetos
                 Municipio municipio = Municipio.builder()
                         .municipio(nomeMunicipio)
                         .estado(estadoMunicipio)
@@ -107,15 +103,6 @@ public class GerenciadorMunicipio {
         }
 
         return (populacaoTotal / populacaoAfetada) * 100;
-
-//        // Formatando o valor conforme localização da IDE para converter a vírgula (conforme utilizado no Brasil)
-//        // para ponto, permitindo leitura do Java
-//        NumberFormat number = NumberFormat.getNumberInstance(new Locale("pt", "BR"));
-//
-//        number.setMaximumFractionDigits(2); // Estabelecendo o máximo de casas decimais
-//        String mediaEmString = number.format(porcentagemAfetada); // Aplicando a formatação ao valor inserido
-//
-//        return Double.parseDouble(mediaEmString); // return com valor convertido em Double novamente: (##.##)
     }
 
     // Trata os dados de string da planilha
@@ -133,9 +120,5 @@ public class GerenciadorMunicipio {
     // Transforma a lista de Iterator em uma List
     public List<?> toList(Iterator<?> iterator) {
         return IteratorUtils.toList(iterator);
-    }
-
-    public void imprimir(List<Municipio> lista) {
-        lista.forEach(System.out::println);
     }
 }
