@@ -81,7 +81,7 @@ public class GerenciadorMunicipio {
         }
     }
 
-    public Double calculateAverage(String areaSaneamentoBasico) {
+    public Double calculateAverage(String areaSaneamentoBasico, String tipoMunicipio) {
         Integer populacaoTotal = 0;
         Double porcentagemArea = 0.0;
         Double populacaoAfetada = 0.0;
@@ -89,13 +89,74 @@ public class GerenciadorMunicipio {
         for (Municipio municipio : municipios) {
             switch (areaSaneamentoBasico) {
                 case "populacaoSemColetaDeLixo":
-                    porcentagemArea = municipio.getPopulacaoSemColetaDeLixo();
-                    break;
+                    if (tipoMunicipio.equals("geral")) {
+                        porcentagemArea = municipio.getPopulacaoSemColetaDeLixo();
+                        break;
+                    } else if (tipoMunicipio.equals("pequeno")) {
+                        if (municipio.getPopulacao() <= 50_000) {
+                            porcentagemArea = municipio.getPopulacaoSemColetaDeLixo();
+                            break;
+                        }
+                        break;
+                    } else if (tipoMunicipio.equals("medio")) {
+                        if (municipio.getPopulacao() >= 50_001 && municipio.getPopulacao() <= 200_000) {
+                            porcentagemArea = municipio.getPopulacaoSemColetaDeLixo();
+                            break;
+                        }
+                        break;
+                    } else if (tipoMunicipio.equals("grande")) {
+                        if (municipio.getPopulacao() >= 200_001) {
+                            porcentagemArea = municipio.getPopulacaoSemColetaDeLixo();
+                            break;
+                        }
+                        break;
+                    }
                 case "populacaoSemAgua":
-                    porcentagemArea = municipio.getPopulacaoSemAgua();
-                    break;
+                    if (tipoMunicipio.equals("geral")) {
+                        porcentagemArea = municipio.getPopulacaoSemAgua();
+                        break;
+                    } else if (tipoMunicipio.equals("pequeno")) {
+                        if (municipio.getPopulacao() <= 50_000) {
+                            porcentagemArea = municipio.getPopulacaoSemAgua();
+                            break;
+                        }
+                        break;
+                    } else if (tipoMunicipio.equals("medio")) {
+                        if (municipio.getPopulacao() >= 50_001 && municipio.getPopulacao() <= 200_000) {
+                            porcentagemArea = municipio.getPopulacaoSemAgua();
+                            break;
+                        }
+                        break;
+                    } else if (tipoMunicipio.equals("grande")) {
+                        if (municipio.getPopulacao() >= 200_001) {
+                            porcentagemArea = municipio.getPopulacaoSemAgua();
+                            break;
+                        }
+                        break;
+                    }
                 case "populacaoSemEsgoto":
-                    porcentagemArea = municipio.getPopulacaoSemEsgoto();
+                    if (tipoMunicipio.equals("geral")) {
+                        porcentagemArea = municipio.getPopulacaoSemEsgoto();
+                        break;
+                    } else if (tipoMunicipio.equals("pequeno")) {
+                        if (municipio.getPopulacao() <= 50_000) {
+                            porcentagemArea = municipio.getPopulacaoSemEsgoto();
+                            break;
+                        }
+                        break;
+                    } else if (tipoMunicipio.equals("medio")) {
+                        if (municipio.getPopulacao() >= 50_001 && municipio.getPopulacao() <= 200_000) {
+                            porcentagemArea = municipio.getPopulacaoSemEsgoto();
+                            break;
+                        }
+                        break;
+                    } else if (tipoMunicipio.equals("grande")) {
+                        if (municipio.getPopulacao() >= 200_001) {
+                            porcentagemArea = municipio.getPopulacaoSemEsgoto();
+                            break;
+                        }
+                        break;
+                    }
             }
 
             populacaoTotal += municipio.getPopulacao();
