@@ -72,7 +72,7 @@ public class ControllerMySQL {
                                 idAgrupamentoMunicipios INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
                                 fkMunicipio INT NOT NULL,
                                 fkTipoMunicipio INT NOT NULL,
-                                tipoAgrupamento ENUM("global", "porte"),
+                                tipoAgrupamento ENUM("geral", "porte"),
                                 FOREIGN KEY (fkMunicipio) REFERENCES municipio(idMunicipio),
                                 FOREIGN KEY (fkTipoMunicipio) REFERENCES tipoMunicipio(idTipoMunicipio)
                             );
@@ -88,6 +88,8 @@ public class ControllerMySQL {
         mainLogger.setLog(3, "Iniciando inserção dos objetos no Banco", ControllerMySQL.class.getName());
         gerenciadorMunicipio.criar();
         listaMunicipios = gerenciadorMunicipio.getMunicipios();
+
+        Integer tipoMunicipio = null;
 
         for (Municipio municipio : listaMunicipios) {
             nameTable = "municipio";
@@ -113,12 +115,14 @@ public class ControllerMySQL {
             switch (counter) {
                 case 1:
                     groupName = "Geral";
+                    tipoMunicipio = 1;
                     semColetaDeLixoParameter = gerenciadorMunicipio.calculateAverage("populacaoSemColetaDeLixo", "geral");
                     semAguaParameter = gerenciadorMunicipio.calculateAverage("populacaoSemAgua", "geral");
                     semEsgotoParameter = gerenciadorMunicipio.calculateAverage("populacaoSemEsgoto", "geral");
                     break;
                 case 2:
                     groupName = "Pequeno Porte";
+                    tipoMunicipio = 2;
                     maxPopulation = 50_000;
                     semColetaDeLixoParameter = gerenciadorMunicipio.calculateAverage("populacaoSemColetaDeLixo", "pequeno");
                     semAguaParameter = gerenciadorMunicipio.calculateAverage("populacaoSemAgua", "pequeno");
@@ -126,6 +130,7 @@ public class ControllerMySQL {
                     break;
                 case 3:
                     groupName = "Médio Porte";
+                    tipoMunicipio = 3;
                     minPopulation = 50_001;
                     maxPopulation = 200_000;
                     semColetaDeLixoParameter = gerenciadorMunicipio.calculateAverage("populacaoSemColetaDeLixo", "medio");
@@ -134,6 +139,7 @@ public class ControllerMySQL {
                     break;
                 case 4:
                     groupName = "Grande Porte";
+                    tipoMunicipio = 4;
                     semColetaDeLixoParameter = gerenciadorMunicipio.calculateAverage("populacaoSemColetaDeLixo", "grande");
                     semAguaParameter = gerenciadorMunicipio.calculateAverage("populacaoSemAgua", "grande");
                     semEsgotoParameter = gerenciadorMunicipio.calculateAverage("populacaoSemEsgoto", "grande");
@@ -146,14 +152,24 @@ public class ControllerMySQL {
             con.update(sqlInsertScript, semColetaDeLixoParameter, semAguaParameter, semEsgotoParameter);
         }
 
-        for (int municipios = 0; municipios <= listaMunicipios.size(); municipios++) {
+        for (int municipios = 0; municipios < listaMunicipios.size(); municipios++) {
             nameTable = "agrupamentoMunicipios";
+            Integer qtdPopulacao = listaMunicipios.get(municipios).getPopulacao();
+
+            if (qtdPopulacao <= 50_000) {
+                tipoMunicipio = 2;
+            } else if (qtdPopulacao <= 200_000) {
+                tipoMunicipio = 3;
+            } else if (qtdPopulacao >= 200_001) {
+                tipoMunicipio = 4;
+            }
 
             String sqlInsertScript = """
                     INSERT INTO %s VALUES (DEFAULT, ?, ?, ?)""".formatted(nameTable);
 
-            con.update(sqlInsertScript, municipios, semAguaParameter, "geral");
-            con.update(sqlInsertScript, municipios, semAguaParameter, "pequeno");
+            int idMunicipio = municipios + 1;
+            con.update(sqlInsertScript, idMunicipio, 1, "geral");
+            con.update(sqlInsertScript, idMunicipio, tipoMunicipio, "porte");
         }
 
         mainLogger.setLog(3, "Todos objetos inseridos no Banco", ControllerMySQL.class.getName());
