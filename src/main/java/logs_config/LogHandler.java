@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 
 @Slf4j
 public class LogHandler {
+
     public void setLog(Integer level, String logName, String className) {
 
         // Instancia um Logger para a classe LogHandler
@@ -46,15 +47,36 @@ public class LogHandler {
                 break;
         }
 
-        LocalDateTime nowDateTime = LocalDateTime.now(); // Obtém a data e hora atuais
+        // Obtém a data e hora atuais
+        LocalDateTime nowDateTime = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");  // Define o formato desejado
         String dateHourFormatted = nowDateTime.format(formatter); // Formata a data e hora
 
         // Configura o nível do Logger
         logger.setLevel(logLevel);
 
-        // Adiciona a mensagem ao log com o nível configurado
-        logger.log(logLevel, logName + System.lineSeparator());
-        System.out.println("%s | [%s]: %s".formatted(dateHourFormatted, logLevel, logName));
+        // Formata a mensagem para o log
+        String logMessage = String.format("%s | [%s]: %s", dateHourFormatted, logLevel, logName);
+        logger.log(logLevel, logMessage);
+
+        // Exibe no console
+        System.out.println(logMessage);
+
+        // Verifica se a origem do log é o LogHandler antes de enviar ao Slack
+        if (className.equals(LogHandler.class.getName())) {
+            // Passa o logMessage e o nível de log para o Slack
+            enviarLogParaSlack(logMessage, level);
+        }
     }
-}
+
+
+    private void enviarLogParaSlack(String logMessage, int level) {
+        try {
+            // Enviar o log para o Slack com o nível de log e a mensagem
+            ComunicacaoSlack.enviarMensagem(level, logMessage);
+        } catch (Exception e) {
+            System.err.println("Erro ao enviar log para o Slack: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    }
