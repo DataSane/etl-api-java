@@ -13,18 +13,14 @@ public class ConnectionMySQL {
     public ConnectionMySQL() {
         BasicDataSource basicDataSource = new BasicDataSource();
 
-        basicDataSource.setUrl("jdbc:mysql://localhost/datasaneBD?useTimezone=true&serverTimezone=UTC");
-        basicDataSource.setUsername("datasane");
-        basicDataSource.setPassword("datasane2024");
-
         // Construindo a URL do banco de dados a partir das variáveis de ambiente
-//        String dbHost = System.getenv("DB_HOST");
-//        String dbName = System.getenv("DB_NAME");
-//        String dbUrl = "jdbc:mysql://" + dbHost + ":3306/" + dbName;
-//
-//        basicDataSource.setUrl(dbUrl);
-//        basicDataSource.setUsername(System.getenv("DB_USER"));
-//        basicDataSource.setPassword(System.getenv("DB_PASSWORD"));
+        String dbHost = System.getenv("DB_HOST");
+        String dbName = System.getenv("DB_NAME");
+        String dbUrl = "jdbc:mysql://" + dbHost + ":3306/" + dbName;
+
+        basicDataSource.setUrl(dbUrl);
+        basicDataSource.setUsername(System.getenv("DB_USER"));
+        basicDataSource.setPassword(System.getenv("DB_PASSWORD"));
 
         this.dataSource = basicDataSource;
     }

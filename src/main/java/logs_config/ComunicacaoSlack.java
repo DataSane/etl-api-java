@@ -12,7 +12,7 @@ public class ComunicacaoSlack {
     private static final HttpClient client = HttpClient.newHttpClient();
 
     // URL do webhook do Slack (substitua pelo seu webhook real)
-    private static final String webhookCanalLog = "https://hooks.slack.com/services/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";
+    private static final String webhookCanalLog = "https://hooks.slack.com/services/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";
 
     public static void enviarMensagem(int level, String mensagem) {
         // Define a descrição do log com base no nível

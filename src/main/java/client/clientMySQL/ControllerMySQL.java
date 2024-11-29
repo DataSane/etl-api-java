@@ -19,7 +19,7 @@ public class ControllerMySQL {
     GerenciadorMunicipio gerenciadorMunicipio = new GerenciadorMunicipio();
     LogHandler mainLogger = new LogHandler(); // intancia, pra usar o método
 
-    String nameDatabase = "datasaneBD";
+    String nameDatabase = "datasane";
     String nameTable = null;
 
     List<Municipio> listaMunicipios = new ArrayList<>();
