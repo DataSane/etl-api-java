@@ -1,6 +1,5 @@
 package logs_config;
 
-import apache_configuration.GerenciadorMunicipio;
 import client.clientMySQL.ControllerMySQL;
 import lombok.extern.slf4j.Slf4j;
 
@@ -13,7 +12,14 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class Main {
     public static void main(String[] args) throws IOException {
+        LogSlack slack = new LogSlack();
+        LogHandler terminal = new LogHandler();
+
+        terminal.setLog(3, "Starting application...", Main.class.getName());
+        slack.setLog(3, "Starting application...", Main.class.getName());
+
         ControllerMySQL controllerMySQL = new ControllerMySQL();
+
 
         controllerMySQL.createTables();
         controllerMySQL.insertMunicipios();
@@ -23,40 +29,8 @@ public class Main {
 
         // Definir o intervalo de 1 minuto (60 segundos)
         scheduler.scheduleAtFixedRate(() -> {
-            // Cria uma instância da classe Random
-            Random random = new Random();
+            slack.setLog(7, "Running application successfully...", Main.class.getName());
 
-            // Gera um número aleatório entre 1 e 7 (níveis de log)
-            int logLevel = random.nextInt(7) + 1;
-
-            // Mensagens diferentes para cada nível de log
-            String mensagem = "";
-            switch (logLevel) {
-                case 1:
-                    mensagem = "Erro grave no sistema. Reinicialização necessária.";
-                    break;
-                case 2:
-                    mensagem = "Aviso: possível problema detectado.";
-                    break;
-                case 3:
-                    mensagem = "Sistema funcionando normalmente.";
-                    break;
-                case 4:
-                    mensagem = "Configuração aplicada com sucesso.";
-                    break;
-                case 5:
-                    mensagem = "Log detalhado para análise de desempenho.";
-                    break;
-                case 6:
-                    mensagem = "Log refinado: detalhes extras para análise.";
-                    break;
-                case 7:
-                    mensagem = "Log de depuração profunda.";
-                    break;
-            }
-
-            // Enviar a mensagem para o Slack diretamente
-            ComunicacaoSlack.enviarMensagem(logLevel, mensagem);
         }, 0, 1, TimeUnit.MINUTES);  // Inicia imediatamente e repete a cada 1 minuto
     };
 }

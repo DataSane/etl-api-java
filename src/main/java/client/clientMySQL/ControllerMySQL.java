@@ -2,13 +2,12 @@ package client.clientMySQL;
 
 import apache_configuration.GerenciadorMunicipio;
 import apache_configuration.Municipio;
+import client.bucketS3.ControllerBucket;
 import logs_config.LogHandler;
+import logs_config.LogSlack;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.ss.formula.atp.Switch;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,19 +16,23 @@ public class ControllerMySQL {
     ConnectionMySQL conexao = new ConnectionMySQL();
     JdbcTemplate con = conexao.getConexao();
     GerenciadorMunicipio gerenciadorMunicipio = new GerenciadorMunicipio();
-    LogHandler mainLogger = new LogHandler(); // intancia, pra usar o método
+    LogHandler terminal = new LogHandler(); // intancia, pra usar o método
+    LogSlack slack = new LogSlack();
 
     String nameDatabase = "datasane";
     String nameTable = null;
 
+
+
     List<Municipio> listaMunicipios = new ArrayList<>();
 
     public void createTables() {
-        mainLogger.setLog(3, "DROP, CREATE e USE database", ControllerMySQL.class.getName());
+
+        terminal.setLog(3, "CREATING DATABASE IF NOT EXISTS", ControllerMySQL.class.getName());
+        slack.setLog(3, "CREATING DATABASE IF NOT EXISTS", ControllerMySQL.class.getName());
+
         con.execute("CREATE DATABASE IF NOT EXISTS %s".formatted(nameDatabase));
         con.execute("USE %s".formatted(nameDatabase));
-
-        mainLogger.setLog(3, "DROP e CREATE TABLE municipio, tipoMunicipio e agrupamentoMunicipios", ControllerMySQL.class.getName());
 
         String createTable = null;
 
@@ -81,12 +84,20 @@ public class ControllerMySQL {
 
             con.execute("DROP TABLE IF EXISTS %s".formatted(nameTable));
             con.execute(createTable);
+
+            terminal.setLog(3, "DROPING OR CREATE TABLE municipio, tipoMunicipio e agrupamentoMunicipios IF NOT EXISTS", ControllerMySQL.class.getName());
+            slack.setLog(3, "DROPING OR CREATE TABLE municipio, tipoMunicipio e agrupamentoMunicipios IF NOT EXISTS", ControllerMySQL.class.getName());
+
         }
     }
 
     public void insertMunicipios() {
-        mainLogger.setLog(3, "Iniciando inserção dos objetos no Banco", ControllerMySQL.class.getName());
+        terminal.setLog(3, "INSERTING municipios INTO DATABASE...", ControllerMySQL.class.getName());
+        terminal.setLog(3, "INSERTING municipios INTO DATABASE...", ControllerMySQL.class.getName());
+
         gerenciadorMunicipio.criar();
+
+
         listaMunicipios = gerenciadorMunicipio.getMunicipios();
 
         Integer tipoMunicipio = null;
@@ -172,6 +183,17 @@ public class ControllerMySQL {
             con.update(sqlInsertScript, idMunicipio, tipoMunicipio, "porte");
         }
 
-        mainLogger.setLog(3, "Todos objetos inseridos no Banco", ControllerMySQL.class.getName());
+        terminal.setLog(3, "Transforming CSV file into Object municipios...", ControllerBucket.class.getName());
+        slack.setLog(3, "Transforming CSV file into Object municipios...", ControllerBucket.class.getName());
+
+        terminal.setLog(3, "Formatting data from Object....", ControllerMySQL.class.getName());
+        slack.setLog(3, "Formatting data from Object...", ControllerMySQL.class.getName());
+
+        terminal.setLog(3, "Preparing INSERT SQL Query...", ControllerMySQL.class.getName());
+        slack.setLog(3, "Preparing INSERT SQL Query...", ControllerMySQL.class.getName());
+
+        terminal.setLog(3, "EVERYTHING HAS BEEN INSERTED ON DATABASE!", ControllerMySQL.class.getName());
+        slack.setLog(3, "EVERYTHING HAS BEEN INSERTED ON DATABASE!", ControllerMySQL.class.getName());
+
     }
 }

@@ -8,8 +8,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Slf4j
-public class LogHandler {
+public class LogHandler extends Log{
 
+    @Override
     public void setLog(Integer level, String logName, String className) {
 
         // Instancia um Logger para a classe LogHandler
@@ -62,21 +63,5 @@ public class LogHandler {
         // Exibe no console
         System.out.println(logMessage);
 
-        // Verifica se a origem do log é o LogHandler antes de enviar ao Slack
-        if (className.equals(LogHandler.class.getName())) {
-            // Passa o logMessage e o nível de log para o Slack
-            enviarLogParaSlack(logMessage, level);
-        }
     }
-
-
-    private void enviarLogParaSlack(String logMessage, int level) {
-        try {
-            // Enviar o log para o Slack com o nível de log e a mensagem
-            ComunicacaoSlack.enviarMensagem(level, logMessage);
-        } catch (Exception e) {
-            System.err.println("Erro ao enviar log para o Slack: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-    }
+}

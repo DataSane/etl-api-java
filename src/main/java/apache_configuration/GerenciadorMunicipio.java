@@ -1,6 +1,8 @@
 package apache_configuration;
 
 import client.bucketS3.ControllerBucket;
+import logs_config.LogHandler;
+import logs_config.LogSlack;
 import lombok.Cleanup;
 import org.apache.commons.collections4.IteratorUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -25,6 +27,9 @@ public class GerenciadorMunicipio {
      */
     List<Municipio> municipios = new ArrayList<>();
 
+    LogSlack slack = new LogSlack();
+    LogHandler terminal = new LogHandler();
+
     public List<Municipio> getMunicipios() {
         return municipios;
     }
@@ -37,15 +42,23 @@ public class GerenciadorMunicipio {
             @Cleanup // Essa anotation fecha o arquivo após ser executado - usada no lugar do try catch
             InputStream file = appBucket.downloadS3();
 
+            terminal.setLog(3, "Downloading CSV file from S3 Bucket", GerenciadorMunicipio.class.getName());
+            slack.setLog(3, "Downloading CSV file from S3 Bucket", GerenciadorMunicipio.class.getName());
+
             Workbook workbook = new HSSFWorkbook(file); // Pega a planilha
+
+            terminal.setLog(3, "Reading CSV file ", GerenciadorMunicipio.class.getName());
+            slack.setLog(3, "Reading CSV file ", GerenciadorMunicipio.class.getName());
 
             // Indica a aba da planilha
             Sheet sheet = workbook.getSheetAt(0);
+
 
             // Percorre cada linha que tem na planilha, e adiciona em uma lista
             List<Row> rows = (List<Row>) toList(sheet.iterator());
             // Remover os cabeçalhos
             rows.remove(0);
+
 
 
             rows.forEach(row -> {
@@ -76,9 +89,13 @@ public class GerenciadorMunicipio {
                 // adiciona o objeto criado na lista de municipios
                 municipios.add(municipio);
             });
+
+
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+
     }
 
     public Double calculateAverage(String areaSaneamentoBasico, String tipoMunicipio) {

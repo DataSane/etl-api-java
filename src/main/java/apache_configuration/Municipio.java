@@ -16,7 +16,6 @@ public class Municipio {
     private Double populacaoSemEsgoto;
     private Double populacaoSemColetaDeLixo;
     private Double domiciliosSujeitosAInundacao;
-
 }
 
 

@@ -1723,3 +1723,24 @@ INFO: Iniciando inserção dos objetos no Banco
 nov. 13, 2024 3:14:50 PM logs_config.LogHandler setLog
 INFO: Todos objetos inseridos no Banco
 
+nov. 24, 2024 6:36:00 PM logs_config.LogHandler setLog
+INFO: DROP, CREATE e USE database
+
+nov. 24, 2024 6:36:01 PM logs_config.LogHandler setLog
+INFO: DROP e CREATE TABLE municipio, tipoMunicipio e agrupamentoMunicipios
+
+nov. 24, 2024 6:36:01 PM logs_config.LogHandler setLog
+INFO: Iniciando inserção dos objetos no Banco
+
+nov. 24, 2024 6:39:09 PM logs_config.LogHandler setLog
+INFO: DROP, CREATE e USE database
+
+nov. 24, 2024 6:39:10 PM logs_config.LogHandler setLog
+INFO: DROP e CREATE TABLE municipio, tipoMunicipio e agrupamentoMunicipios
+
+nov. 24, 2024 6:39:10 PM logs_config.LogHandler setLog
+INFO: Iniciando inserção dos objetos no Banco
+
+nov. 24, 2024 6:39:15 PM logs_config.LogHandler setLog
+INFO: Todos objetos inseridos no Banco
+

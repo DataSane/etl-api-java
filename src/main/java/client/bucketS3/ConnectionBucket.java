@@ -8,6 +8,8 @@ import software.amazon.awssdk.services.s3.S3Client;
 public class ConnectionBucket {
 
     private final AwsSessionCredentials credentials;
+    Dotenv dotenv = Dotenv.load();
+
     public ConnectionBucket() {
         this.credentials = AwsSessionCredentials.create(
                 System.getenv("AWS_ACCESS_KEY_ID"),
@@ -15,6 +17,7 @@ public class ConnectionBucket {
                 System.getenv("AWS_SESSION_TOKEN")
         );
     }
+
 
     public S3Client getS3Client() {
         return S3Client.builder()
